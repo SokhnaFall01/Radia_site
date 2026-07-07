@@ -34,7 +34,7 @@ export default async function Header() {
   const user = await getCurrentUser();
 
   return (
-    <header className="relative border-b border-[var(--ligne)] bg-[var(--porcelaine)]">
+    <header className="relative z-50 border-b border-[var(--ligne)] bg-[var(--porcelaine)]">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <div className="flex items-center gap-4">
           <MobileNav navLinks={navLinks} />

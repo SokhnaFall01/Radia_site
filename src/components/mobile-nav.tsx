@@ -20,7 +20,7 @@ export default function MobileNav({ navLinks }: { navLinks: { href: string; labe
       </button>
 
       {open && (
-        <nav className="absolute left-0 right-0 top-full flex flex-col border-b border-[var(--ligne)] bg-[var(--porcelaine)] px-6 py-4 text-xs uppercase tracking-[0.1em]">
+        <nav className="absolute left-0 right-0 top-full z-50 flex flex-col border-b border-[var(--ligne)] bg-[var(--porcelaine)] px-6 py-4 text-xs uppercase tracking-[0.1em] shadow-lg">
           {navLinks.map((link) => (
             <Link
               key={link.href}
