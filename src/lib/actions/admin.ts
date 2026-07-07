@@ -436,3 +436,20 @@ export async function deletePhotoGalerie(id: string) {
   revalidatePath("/");
   redirect("/admin/contenu?maj=ok");
 }
+
+// ---- Clients & eleves ----
+
+export async function updateUserRole(userId: string, formData: FormData) {
+  await requireAdmin();
+
+  const role = str(formData, "role");
+  if (role !== "CLIENTE" && role !== "STAFF") {
+    redirect("/admin/clients");
+  }
+
+  await prisma.user.update({ where: { id: userId }, data: { role } });
+
+  revalidatePath("/admin/clients");
+  revalidatePath(`/admin/clients/${userId}`);
+  redirect(`/admin/clients/${userId}?maj=ok`);
+}

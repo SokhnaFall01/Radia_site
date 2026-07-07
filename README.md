@@ -139,13 +139,24 @@ docker compose exec db pg_dump -U radia radia_glam > backup_$(date +%F).sql
 - **Contenu & photos du site** (`/admin/contenu`) : photo et textes du hero
   d'accueil, portrait/texte/citation de la page "À propos", et galerie
   photo (upload + légende) — tout est éditable sans toucher au code
+- **Boutique avec filtres & tri** : catégories cliquables et tri (nouveautés,
+  prix croissant/décroissant, nom) sur `/boutique`
+- **Clients & élèves** (`/admin/clients`) : liste de tous les comptes avec
+  compteurs d'activité, fiche profil détaillée (rendez-vous, commandes,
+  formations, certificats), et attribution du rôle **staff** directement
+  depuis la fiche (plus besoin de SQL pour créer un compte maquilleuse)
+- **Statistiques** (`/admin/statistiques`) : chiffre d'affaires boutique et
+  salon, nombre de produits vendus et meilleures ventes, rendez-vous par
+  statut et par maquilleuse, nombre d'inscriptions
 
 Ce qui reste volontairement hors-ligne pour l'instant (documenté dans le code
 et l'UI) : le règlement de la boutique et des inscriptions se fait en espèces
 au salon/à la livraison, en attendant le compte marchand PayDunya/PayTech.
 Il n'y a pas encore d'inscription en libre-service à une formation (l'ajout
 d'un élève à une session se fait aujourd'hui côté base de données/admin), ni
-de codes promo, ni de gestion des élèves/clientes depuis le tableau de bord.
+de codes promo. La promotion au rôle **admin** reste volontairement réservée
+au SQL (voir plus bas) pour éviter toute escalade de privilège accidentelle
+depuis l'interface.
 
 ### Photos uploadées
 
