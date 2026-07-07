@@ -103,23 +103,40 @@ docker compose up -d --build
 docker compose exec db pg_dump -U radia radia_glam > backup_$(date +%F).sql
 ```
 
-## Modules couverts par ce squelette (Phase 1)
+## Modules couverts par ce squelette
 
 - Site public (accueil, à propos, galerie, contact)
 - Compte unique (inscription / connexion / déconnexion), rôles
   cliente / staff / admin, sessions signées et chiffrées
-- Catalogue Academy (lecture) — inscriptions/paiement/LMS à venir en Phase 2
+- Catalogue Academy (lecture) — inscriptions en ligne + paiement à venir
 - Réservation salon (choix prestation, maquilleuse optionnelle, créneau) —
   crée la demande de rendez-vous ; confirmée manuellement par le salon
-- Espace élève/cliente (historique de ses rendez-vous)
+- **Espace élève (LMS)** : formations de l'élève avec barre de progression,
+  leçons (vidéo/PDF), quiz noté (70% requis pour valider), génération
+  automatique d'un **certificat PDF réel** téléchargeable dès que toutes les
+  leçons d'une formation sont terminées
+- **Boutique** : catalogue produits avec gestion du stock et rupture
+  automatique, panier, commande (retrait au salon ou livraison à Dakar avec
+  frais fixes), décrément de stock en transaction, suivi de commande côté
+  cliente (`espace/commandes`)
 - Tableau de bord staff/admin (agenda) — gestion formations/produits/contenus
-  à venir en Phase 2/3
+  à venir
+
+Ce qui reste volontairement hors-ligne pour l'instant (documenté dans le code
+et l'UI) : le règlement de la boutique et des inscriptions se fait en espèces
+au salon/à la livraison, en attendant le compte marchand PayDunya/PayTech.
+Il n'y a pas encore d'inscription en libre-service à une formation (l'ajout
+d'un élève à une session se fait aujourd'hui côté base de données/admin) ni
+de codes promo.
 
 ## Prochaines étapes (hors scope de ce squelette)
 
 - Paiement en ligne Wave / Orange Money / CB : nécessite un compte marchand
-  PayDunya, PayTech ou CinetPay pour brancher l'API
+  PayDunya, PayTech ou CinetPay pour brancher l'API (boutique + academy +
+  réservation)
 - Notifications WhatsApp Business + email (confirmations, rappels 24h)
-- Espace élève complet (vidéos, PDF, quiz, certificats) — Mux/Vimeo Pro
-- Boutique (produits, stocks, commandes)
-- Gestion des contenus/photos et statistiques dans le tableau de bord admin
+- Inscription en ligne à une formation (choix de session + paiement/acompte)
+- Hébergement vidéo sécurisé (Mux/Vimeo Pro) pour les leçons
+- Codes promo boutique
+- Gestion des contenus/photos, formations, produits et statistiques depuis le
+  tableau de bord admin (actuellement en lecture seule via la base de données)

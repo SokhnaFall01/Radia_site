@@ -1,18 +1,22 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/dal";
 import { logout } from "@/lib/actions/auth";
+import { getCartDetails } from "@/lib/cart";
 
 const navLinks = [
   { href: "/", label: "Accueil" },
   { href: "/a-propos", label: "A propos" },
   { href: "/academy", label: "Academy" },
   { href: "/reservation", label: "Reservation" },
+  { href: "/boutique", label: "Boutique" },
   { href: "/galerie", label: "Galerie" },
   { href: "/contact", label: "Contact" },
 ];
 
 export default async function Header() {
   const user = await getCurrentUser();
+  const { items } = await getCartDetails();
+  const cartCount = items.reduce((sum, i) => sum + i.quantite, 0);
 
   return (
     <header className="border-b border-[var(--ligne)] bg-[var(--porcelaine)]">
@@ -28,6 +32,9 @@ export default async function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-4 text-xs uppercase tracking-[0.1em]">
+          <Link href="/boutique/panier" className="hover:text-[var(--brass)]">
+            Panier{cartCount > 0 ? ` (${cartCount})` : ""}
+          </Link>
           {user ? (
             <>
               <Link href={user.role === "CLIENTE" ? "/espace" : "/admin"} className="hover:text-[var(--brass)]">

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { verifySession } from "@/lib/dal";
 import { prisma } from "@/lib/db";
@@ -33,6 +34,15 @@ export default async function EspacePage({
           Votre demande de rendez-vous a bien ete enregistree.
         </p>
       )}
+
+      <div className="mt-8 flex gap-4 text-xs uppercase tracking-[0.1em]">
+        <Link href="/espace/formations" className="border border-[var(--noir)] px-4 py-2 hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]">
+          Mes formations
+        </Link>
+        <Link href="/espace/commandes" className="border border-[var(--noir)] px-4 py-2 hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]">
+          Mes commandes
+        </Link>
+      </div>
 
       <h2 className="mt-10 font-display text-sm uppercase tracking-[0.12em]">Mes rendez-vous</h2>
       {rendezVous.length === 0 ? (

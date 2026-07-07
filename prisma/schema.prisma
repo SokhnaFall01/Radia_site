@@ -36,6 +36,7 @@ enum StatutInscription {
 }
 
 enum StatutCommande {
+  EN_ATTENTE
   PAYEE
   PREPAREE
   LIVREE
@@ -251,7 +252,7 @@ model Commande {
   totalFcfa   Int
   livraison   TypeLivraison
   adresse     String?
-  statut      StatutCommande @default(PAYEE)
+  statut      StatutCommande @default(EN_ATTENTE)
   createdAt   DateTime       @default(now())
 
   lignes   LigneCommande[]
