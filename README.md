@@ -136,14 +136,16 @@ docker compose exec db pg_dump -U radia radia_glam > backup_$(date +%F).sql
   dynamiquement sur `/contact` et dans le pied de page du site
 - Menu mobile (hamburger) et bouton "Administration" visible directement
   dans l'en-tête pour les comptes admin
+- **Contenu & photos du site** (`/admin/contenu`) : photo et textes du hero
+  d'accueil, portrait/texte/citation de la page "À propos", et galerie
+  photo (upload + légende) — tout est éditable sans toucher au code
 
 Ce qui reste volontairement hors-ligne pour l'instant (documenté dans le code
 et l'UI) : le règlement de la boutique et des inscriptions se fait en espèces
 au salon/à la livraison, en attendant le compte marchand PayDunya/PayTech.
 Il n'y a pas encore d'inscription en libre-service à une formation (l'ajout
 d'un élève à une session se fait aujourd'hui côté base de données/admin), ni
-de codes promo, ni de gestion des élèves/clientes depuis le tableau de bord,
-ni d'édition des textes libres du site (accueil, à propos...).
+de codes promo, ni de gestion des élèves/clientes depuis le tableau de bord.
 
 ### Photos uploadées
 

@@ -11,7 +11,7 @@ export default async function BoutiqueLayout({ children }: { children: React.Rea
       {cartCount > 0 && (
         <Link
           href="/boutique/panier"
-          className="fixed bottom-6 left-6 z-50 flex items-center gap-2 border border-[var(--noir)] bg-[var(--porcelaine)] px-5 py-3 text-xs uppercase tracking-[0.1em] shadow-lg"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 border border-[var(--noir)] bg-[var(--porcelaine)] px-5 py-3 text-xs uppercase tracking-[0.1em] shadow-lg"
         >
           🛒 Panier · {cartCount} article{cartCount > 1 ? "s" : ""}
         </Link>

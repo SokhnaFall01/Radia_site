@@ -52,7 +52,7 @@ export default async function AdminFormationEditPage({
         </p>
       )}
 
-      <form action={updateFormation.bind(null, id)} encType="multipart/form-data" className="mt-8 flex flex-col gap-4">
+      <form action={updateFormation.bind(null, id)} className="mt-8 flex flex-col gap-4">
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="titre">Titre</label>
           <input id="titre" name="titre" defaultValue={formation.titre} required className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />

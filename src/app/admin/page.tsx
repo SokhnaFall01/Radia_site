@@ -78,17 +78,18 @@ export default async function AdminPage() {
           >
             Coordonnees &amp; reseaux
           </Link>
-          {["Elèves & clientes", "Contenus & photos du site"].map((label) => (
-            <div
-              key={label}
-              className="border border-dashed border-[var(--ligne)] bg-white p-5 text-sm text-[var(--gris)]"
-            >
-              {label}
-              <span className="ml-2 text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
-                A venir
-              </span>
-            </div>
-          ))}
+          <Link
+            href="/admin/contenu"
+            className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
+          >
+            Contenu &amp; photos du site
+          </Link>
+          <div className="border border-dashed border-[var(--ligne)] bg-white p-5 text-sm text-[var(--gris)]">
+            Elèves &amp; clientes
+            <span className="ml-2 text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
+              A venir
+            </span>
+          </div>
         </div>
       )}
     </section>

@@ -68,7 +68,7 @@ export default async function AdminFormationsPage({
       </ul>
 
       <h2 className="mt-14 font-display text-sm uppercase tracking-[0.12em]">Ajouter une formation</h2>
-      <form action={createFormation} encType="multipart/form-data" className="mt-6 flex flex-col gap-4">
+      <form action={createFormation} className="mt-6 flex flex-col gap-4">
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="titre">Titre</label>
           <input id="titre" name="titre" required className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />

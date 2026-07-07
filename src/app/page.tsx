@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { ajouterAuPanier } from "@/lib/actions/cart";
+import { getSiteTextes } from "@/lib/contenuTextes";
 
 const TEMOIGNAGES = [
   { texte: "Une equipe passionnee, un resultat au-dela de mes attentes le jour de mon mariage.", qui: "Fatou S." },
@@ -9,42 +10,51 @@ const TEMOIGNAGES = [
 ];
 
 export default async function Home() {
-  const [prestations, formations, produits] = await Promise.all([
+  const [prestations, formations, produits, t, galerie] = await Promise.all([
     prisma.prestation.findMany({ where: { actif: true }, orderBy: { nom: "asc" }, take: 3 }),
     prisma.formation.findMany({ where: { publie: true }, orderBy: { createdAt: "desc" }, take: 5 }),
     prisma.produit.findMany({ orderBy: { createdAt: "desc" }, take: 4 }),
+    getSiteTextes(),
+    prisma.photoGalerie.findMany({ orderBy: { ordre: "asc" }, take: 4 }),
   ]);
 
   return (
     <div>
       {/* Hero */}
-      <section className="mx-auto max-w-4xl px-6 py-28 text-center">
-        <p className="text-xs uppercase tracking-[0.35em] text-[var(--brass)]">
-          Salon · Academy · Boutique
-        </p>
-        <h1 className="font-display mt-7 text-4xl uppercase tracking-[0.1em] sm:text-6xl">
-          Revelez votre eclat
-        </h1>
-        <p className="font-italic-serif mt-3 text-xl text-[var(--gris)] sm:text-2xl">
-          L&apos;art de la beaute, signe Radia Glam
-        </p>
-        <p className="mx-auto mt-8 max-w-lg text-[var(--gris)]">
-          Un espace dedie a la beaute haut de gamme : prestations sur mesure en salon, formations
-          professionnelles certifiantes et une boutique pensee pour sublimer chaque geste.
-        </p>
-        <div className="mt-11 flex flex-wrap items-center justify-center gap-4">
-          <Link
-            href="/reservation"
-            className="border border-[var(--noir)] bg-[var(--noir)] px-8 py-4 text-xs uppercase tracking-[0.18em] text-[var(--porcelaine)]"
-          >
-            Reserver une prestation
-          </Link>
-          <Link
-            href="/academy"
-            className="border border-[var(--noir)] px-8 py-4 text-xs uppercase tracking-[0.18em]"
-          >
-            S&apos;inscrire a une formation
-          </Link>
+      <section className="relative overflow-hidden">
+        {t.heroPhoto && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={t.heroPhoto}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+        <div
+          className={`relative mx-auto max-w-4xl px-6 py-28 text-center ${t.heroPhoto ? "bg-[var(--porcelaine)]/80" : ""}`}
+        >
+          <p className="text-xs uppercase tracking-[0.35em] text-[var(--brass)]">{t.heroKicker}</p>
+          <h1 className="font-display mt-7 text-4xl uppercase tracking-[0.1em] sm:text-6xl">
+            {t.heroTitre}
+          </h1>
+          <p className="font-italic-serif mt-3 text-xl text-[var(--gris)] sm:text-2xl">
+            {t.heroSousTitre}
+          </p>
+          <p className="mx-auto mt-8 max-w-lg text-[var(--gris)]">{t.heroTexte}</p>
+          <div className="mt-11 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/reservation"
+              className="border border-[var(--noir)] bg-[var(--noir)] px-8 py-4 text-xs uppercase tracking-[0.18em] text-[var(--porcelaine)]"
+            >
+              Reserver une prestation
+            </Link>
+            <Link
+              href="/academy"
+              className="border border-[var(--noir)] bg-[var(--porcelaine)] px-8 py-4 text-xs uppercase tracking-[0.18em]"
+            >
+              S&apos;inscrire a une formation
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -176,16 +186,30 @@ export default async function Home() {
               Realisations du salon &amp; travaux des eleves
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {["Avant / Apres", "Mariee", "Eleves en formation", "Shooting editorial"].map((label) => (
-              <div
-                key={label}
-                className="flex h-56 items-center justify-center bg-gradient-to-br from-[var(--blush)] to-[#b08f71] text-center text-sm italic text-[var(--noir)]/60"
-              >
-                {label}
-              </div>
-            ))}
-          </div>
+          {galerie.length === 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {["Avant / Apres", "Mariee", "Eleves en formation", "Shooting editorial"].map((label) => (
+                <div
+                  key={label}
+                  className="flex h-56 items-center justify-center bg-gradient-to-br from-[var(--blush)] to-[#b08f71] text-center text-sm italic text-[var(--noir)]/60"
+                >
+                  {label}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {galerie.map((photo) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={photo.id}
+                  src={photo.url}
+                  alt={photo.legende ?? ""}
+                  className="h-56 w-full object-cover"
+                />
+              ))}
+            </div>
+          )}
           <div className="mt-10 text-center">
             <Link href="/galerie" className="border-b border-[var(--brass)] text-xs uppercase tracking-[0.14em]">
               Voir toute la galerie
@@ -197,26 +221,24 @@ export default async function Home() {
       {/* A propos */}
       <section id="apropos" className="border-t border-[var(--ligne)] bg-white py-24">
         <div className="mx-auto grid max-w-5xl gap-14 px-6 sm:grid-cols-[minmax(240px,380px)_1fr] sm:items-center">
-          <div className="relative h-96 bg-gradient-to-br from-[var(--blush)] via-[#cbb39d] to-[#a98c72]">
-            <div className="absolute inset-4 border border-[var(--noir)]/50" />
-            <div className="flex h-full items-center justify-center text-center text-sm italic text-[var(--noir)]/60">
-              Portrait de la fondatrice
-            </div>
+          <div className="relative h-96">
+            {t.aproposPhoto ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={t.aproposPhoto} alt={t.aproposTitre} className="h-full w-full object-cover" />
+            ) : (
+              <div className="flex h-full items-center justify-center bg-gradient-to-br from-[var(--blush)] via-[#cbb39d] to-[#a98c72] text-center text-sm italic text-[var(--noir)]/60">
+                Portrait de la fondatrice
+              </div>
+            )}
+            <div className="pointer-events-none absolute inset-4 border border-[var(--noir)]/50" />
           </div>
           <div>
-            <p className="text-xs uppercase tracking-[0.32em] text-[var(--brass)]">A propos</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-[var(--brass)]">{t.aproposKicker}</p>
             <h2 className="font-display mt-4 text-2xl uppercase tracking-[0.1em] sm:text-3xl">
-              La femme derriere Radia Glam
+              {t.aproposTitre}
             </h2>
-            <p className="font-italic-serif mt-2 text-lg text-[var(--gris)]">
-              Fondatrice · Maquilleuse professionnelle &amp; formatrice
-            </p>
-            <p className="mt-6 max-w-lg text-[var(--gris)]">
-              Passionnee par l&apos;art de la beaute depuis toujours, la fondatrice a cree Radia
-              Glam avec une conviction : chaque femme merite de reveler son eclat. Aujourd&apos;hui,
-              Radia Glam c&apos;est un salon, une academy et une boutique — un univers complet pense
-              pour sublimer et elever.
-            </p>
+            <p className="font-italic-serif mt-2 text-lg text-[var(--gris)]">{t.aproposRole}</p>
+            <p className="mt-6 max-w-lg text-[var(--gris)]">{t.aproposBio1}</p>
             <Link
               href="/a-propos"
               className="mt-8 inline-block border border-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.14em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"

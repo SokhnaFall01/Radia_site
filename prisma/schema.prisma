@@ -306,6 +306,14 @@ model JourFerme {
   motif String?
 }
 
+model PhotoGalerie {
+  id        String   @id @default(cuid())
+  url       String
+  legende   String?
+  ordre     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
 model ContenuSite {
   id          String   @id @default(cuid())
   cle         String   @unique

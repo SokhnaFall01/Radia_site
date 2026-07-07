@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { verifySession } from "@/lib/dal";
 import { saveUploadedPhoto } from "@/lib/uploads";
 import { CONTACT_KEYS } from "@/lib/contenu";
+import { SITE_TEXT_KEYS } from "@/lib/contenuTextes";
 
 async function requireAdmin() {
   const session = await verifySession();
@@ -350,4 +351,88 @@ export async function updateCoordonnees(formData: FormData) {
   revalidatePath("/contact");
   revalidatePath("/");
   redirect("/admin/coordonnees?maj=ok");
+}
+
+// ---- Contenu du site (textes + photos) ----
+
+function photoFileNamed(formData: FormData, name: string) {
+  const v = formData.get(name);
+  return v instanceof File ? v : null;
+}
+
+export async function updateSiteTextes(formData: FormData) {
+  await requireAdmin();
+
+  let heroPhotoUrl: string | null = null;
+  let aproposPhotoUrl: string | null = null;
+  try {
+    heroPhotoUrl = await saveUploadedPhoto(photoFileNamed(formData, "heroPhoto"));
+    aproposPhotoUrl = await saveUploadedPhoto(photoFileNamed(formData, "aproposPhoto"));
+  } catch {
+    redirect("/admin/contenu?erreur=photo");
+  }
+
+  for (const [name, cle] of Object.entries(SITE_TEXT_KEYS)) {
+    if (name === "heroPhoto" || name === "aproposPhoto") continue;
+    const valeur = str(formData, name);
+    await prisma.contenuSite.upsert({
+      where: { cle },
+      update: { valeur },
+      create: { cle, valeur },
+    });
+  }
+
+  if (heroPhotoUrl) {
+    await prisma.contenuSite.upsert({
+      where: { cle: SITE_TEXT_KEYS.heroPhoto },
+      update: { valeur: heroPhotoUrl },
+      create: { cle: SITE_TEXT_KEYS.heroPhoto, valeur: heroPhotoUrl },
+    });
+  }
+  if (aproposPhotoUrl) {
+    await prisma.contenuSite.upsert({
+      where: { cle: SITE_TEXT_KEYS.aproposPhoto },
+      update: { valeur: aproposPhotoUrl },
+      create: { cle: SITE_TEXT_KEYS.aproposPhoto, valeur: aproposPhotoUrl },
+    });
+  }
+
+  revalidatePath("/admin/contenu");
+  revalidatePath("/");
+  revalidatePath("/a-propos");
+  redirect("/admin/contenu?maj=ok");
+}
+
+export async function addPhotoGalerie(formData: FormData) {
+  await requireAdmin();
+
+  let url: string | null = null;
+  try {
+    url = await saveUploadedPhoto(photoFile(formData));
+  } catch {
+    redirect("/admin/contenu?erreur=photo");
+  }
+  if (!url) redirect("/admin/contenu?erreur=photo");
+
+  const count = await prisma.photoGalerie.count();
+
+  await prisma.photoGalerie.create({
+    data: { url, legende: str(formData, "legende") || null, ordre: count },
+  });
+
+  revalidatePath("/admin/contenu");
+  revalidatePath("/galerie");
+  revalidatePath("/");
+  redirect("/admin/contenu?maj=ok");
+}
+
+export async function deletePhotoGalerie(id: string) {
+  await requireAdmin();
+
+  await prisma.photoGalerie.delete({ where: { id } });
+
+  revalidatePath("/admin/contenu");
+  revalidatePath("/galerie");
+  revalidatePath("/");
+  redirect("/admin/contenu?maj=ok");
 }
