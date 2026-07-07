@@ -1,0 +1,125 @@
+# Radia Glam Beauty & Co. — Plateforme
+
+Squelette Phase 1 (site public, compte unique, reservation salon) de l'architecture
+fonctionnelle Radia Glam. Next.js 16 (App Router) + PostgreSQL (Prisma 7) + sessions
+chiffrees maison (JWT en cookie httpOnly).
+
+## Développement local
+
+Prérequis : Node.js 22+, une base PostgreSQL accessible.
+
+```bash
+npm install
+cp .env.example .env   # puis renseignez DATABASE_URL et SESSION_SECRET
+npx prisma migrate dev
+npm run dev
+```
+
+Générer un `SESSION_SECRET` :
+
+```bash
+openssl rand -base64 32
+```
+
+Ouvrez [http://localhost:3000](http://localhost:3000).
+
+## Déploiement sur votre propre serveur (VPS), avec HTTPS
+
+Ce repo inclut tout le nécessaire pour un déploiement Docker sur un VPS
+(OVH, DigitalOcean, Hostinger...), avec **HTTPS automatique** via Caddy — c'est
+ce qui garantit qu'un lien vers votre site est bien sécurisé (`https://`), même
+sans nom de domaine acheté pour l'instant.
+
+### 1. Prérequis sur le serveur
+
+- Un VPS avec Docker et Docker Compose installés
+- Les ports **80** et **443** ouverts dans le pare-feu (nécessaires pour que
+  Caddy obtienne un certificat HTTPS automatiquement via Let's Encrypt)
+
+### 2. Récupérer le code sur le serveur
+
+```bash
+git clone <url-du-repo> radia-glam
+cd radia-glam
+```
+
+### 3. Configurer les variables d'environnement
+
+Créez un fichier `.env` à la racine (utilisé par `docker-compose.yml`) :
+
+```bash
+POSTGRES_PASSWORD=choisissez-un-mot-de-passe-fort
+SESSION_SECRET=<sortie de: openssl rand -base64 32>
+DOMAIN=votre-domaine.com
+```
+
+**Vous n'avez pas encore de nom de domaine ?** Vous pouvez obtenir un lien HTTPS
+valide dès aujourd'hui, sans rien acheter, grâce à un domaine "magique" qui
+pointe vers l'IP de votre serveur :
+
+```bash
+DOMAIN=<IP-DE-VOTRE-SERVEUR>.sslip.io
+# exemple : DOMAIN=203.0.113.42.sslip.io
+```
+
+Caddy obtiendra automatiquement un vrai certificat Let's Encrypt pour ce lien.
+Vos utilisatrices pourront accéder au site via `https://203.0.113.42.sslip.io`
+en toute sécurité. Le jour où vous achetez un nom de domaine, il suffira de
+changer `DOMAIN` dans le `.env` et de relancer `docker compose up -d`.
+
+### 4. Lancer la plateforme
+
+```bash
+docker compose up -d --build
+```
+
+Cela démarre 3 services :
+
+- `app` — l'application Next.js (les migrations de base de données sont
+  appliquées automatiquement au démarrage)
+- `db` — PostgreSQL avec les données persistées dans un volume Docker
+- `caddy` — reverse proxy qui gère le HTTPS automatique et sert le site sur les
+  ports 80/443
+
+Vérifiez que tout tourne :
+
+```bash
+docker compose ps
+docker compose logs -f app
+```
+
+Le site est maintenant accessible via `https://<DOMAIN>`.
+
+### 5. Mettre à jour après un nouveau déploiement
+
+```bash
+git pull
+docker compose up -d --build
+```
+
+### 6. Sauvegardes de la base de données
+
+```bash
+docker compose exec db pg_dump -U radia radia_glam > backup_$(date +%F).sql
+```
+
+## Modules couverts par ce squelette (Phase 1)
+
+- Site public (accueil, à propos, galerie, contact)
+- Compte unique (inscription / connexion / déconnexion), rôles
+  cliente / staff / admin, sessions signées et chiffrées
+- Catalogue Academy (lecture) — inscriptions/paiement/LMS à venir en Phase 2
+- Réservation salon (choix prestation, maquilleuse optionnelle, créneau) —
+  crée la demande de rendez-vous ; confirmée manuellement par le salon
+- Espace élève/cliente (historique de ses rendez-vous)
+- Tableau de bord staff/admin (agenda) — gestion formations/produits/contenus
+  à venir en Phase 2/3
+
+## Prochaines étapes (hors scope de ce squelette)
+
+- Paiement en ligne Wave / Orange Money / CB : nécessite un compte marchand
+  PayDunya, PayTech ou CinetPay pour brancher l'API
+- Notifications WhatsApp Business + email (confirmations, rappels 24h)
+- Espace élève complet (vidéos, PDF, quiz, certificats) — Mux/Vimeo Pro
+- Boutique (produits, stocks, commandes)
+- Gestion des contenus/photos et statistiques dans le tableau de bord admin
