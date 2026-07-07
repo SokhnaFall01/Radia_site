@@ -292,6 +292,20 @@ model Paiement {
   @@index([userId])
 }
 
+model HoraireOuverture {
+  id         String  @id @default(cuid())
+  jour       Int     @unique
+  ouvert     Boolean @default(true)
+  heureDebut String
+  heureFin   String
+}
+
+model JourFerme {
+  id    String   @id @default(cuid())
+  date  DateTime @unique @db.Date
+  motif String?
+}
+
 model ContenuSite {
   id          String   @id @default(cuid())
   cle         String   @unique

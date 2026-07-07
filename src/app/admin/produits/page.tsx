@@ -35,11 +35,24 @@ export default async function AdminProduitsPage({
           Impossible de supprimer : ce produit apparait dans des commandes existantes.
         </p>
       )}
+      {erreur === "photo" && (
+        <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
+          Photo invalide (jpg/png/webp, 5 Mo max).
+        </p>
+      )}
 
       <ul className="mt-8 flex flex-col gap-4">
         {produits.map((p) => (
           <li key={p.id} className="border border-[var(--ligne)] bg-white p-4 text-sm">
-            <form action={updateProduit.bind(null, p.id)} className="flex flex-wrap items-end gap-3">
+            <form action={updateProduit.bind(null, p.id)} encType="multipart/form-data" className="flex flex-wrap items-end gap-3">
+              {p.photos[0] && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={p.photos[0]} alt="" className="h-16 w-16 object-cover" />
+              )}
+              <div>
+                <label className="text-xs uppercase tracking-[0.1em]">Photo</label>
+                <input name="photo" type="file" accept="image/jpeg,image/png,image/webp" className="mt-1 block text-sm" />
+              </div>
               <div>
                 <label className="text-xs uppercase tracking-[0.1em]">Nom</label>
                 <input name="nom" defaultValue={p.nom} required className="mt-1 block border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
@@ -82,7 +95,11 @@ export default async function AdminProduitsPage({
       </ul>
 
       <h2 className="mt-14 font-display text-sm uppercase tracking-[0.12em]">Ajouter un produit</h2>
-      <form action={createProduit} className="mt-6 flex flex-wrap items-end gap-4">
+      <form action={createProduit} encType="multipart/form-data" className="mt-6 flex flex-wrap items-end gap-4">
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="photo">Photo</label>
+          <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" className="mt-1 block text-sm" />
+        </div>
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="nom">Nom</label>
           <input id="nom" name="nom" required className="mt-1 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />

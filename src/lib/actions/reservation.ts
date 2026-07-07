@@ -3,36 +3,31 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { verifySession } from "@/lib/dal";
-
-export type ReservationFormState = { message?: string } | undefined;
+import { getCreneauxDisponibles } from "@/lib/creneaux";
 
 export async function reserver(
-  _state: ReservationFormState,
-  formData: FormData,
-): Promise<ReservationFormState> {
+  prestationId: string,
+  maquilleuseId: string | null,
+  dateStr: string,
+  heure: string,
+) {
   const session = await verifySession();
-  if (!session) {
-    redirect("/connexion");
+  if (!session) redirect("/connexion");
+
+  const disponibilite = await getCreneauxDisponibles(dateStr, prestationId, maquilleuseId ?? undefined);
+  if (!disponibilite.ouvert || !disponibilite.creneaux.includes(heure)) {
+    redirect(`/reservation?prestationId=${prestationId}&date=${dateStr}&erreur=indisponible`);
   }
 
-  const prestationId = formData.get("prestationId");
-  const dateStr = formData.get("date");
-  const maquilleuseId = formData.get("maquilleuseId");
-
-  if (typeof prestationId !== "string" || typeof dateStr !== "string" || !dateStr) {
-    return { message: "Merci de choisir une prestation et une date." };
-  }
-
-  const date = new Date(dateStr);
-  if (Number.isNaN(date.getTime()) || date.getTime() < Date.now()) {
-    return { message: "Merci de choisir une date valide dans le futur." };
-  }
+  const [heureH, heureM] = heure.split(":").map(Number);
+  const date = new Date(`${dateStr}T00:00:00.000Z`);
+  date.setUTCHours(heureH, heureM, 0, 0);
 
   await prisma.rendezVous.create({
     data: {
       clienteId: session.userId,
       prestationId,
-      maquilleuseId: typeof maquilleuseId === "string" && maquilleuseId ? maquilleuseId : null,
+      maquilleuseId: maquilleuseId || null,
       date,
       statut: "EN_ATTENTE",
       origine: "EN_LIGNE",

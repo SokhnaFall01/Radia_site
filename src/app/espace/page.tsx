@@ -53,7 +53,7 @@ export default async function EspacePage({
             <li key={rdv.id} className="border border-[var(--ligne)] bg-white p-4 text-sm">
               <p className="font-medium">{rdv.prestation.nom}</p>
               <p className="text-[var(--gris)]">
-                {rdv.date.toLocaleString("fr-FR")}
+                {rdv.date.toLocaleString("fr-FR", { timeZone: "UTC" })}
                 {rdv.maquilleuse ? ` — avec ${rdv.maquilleuse.nom}` : ""}
               </p>
               <p className="mt-1 text-xs uppercase tracking-[0.1em] text-[var(--brass)]">

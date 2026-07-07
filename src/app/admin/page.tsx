@@ -37,7 +37,7 @@ export default async function AdminPage() {
               <p className="font-medium">
                 {rdv.prestation.nom} — {rdv.cliente.nom}
               </p>
-              <p className="text-[var(--gris)]">{rdv.date.toLocaleString("fr-FR")}</p>
+              <p className="text-[var(--gris)]">{rdv.date.toLocaleString("fr-FR", { timeZone: "UTC" })}</p>
               <p className="mt-1 text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
                 {rdv.statut} · {rdv.origine}
               </p>
@@ -66,7 +66,19 @@ export default async function AdminPage() {
           >
             Produits &amp; stocks
           </Link>
-          {["Elèves & clientes", "Contenus du site & photos"].map((label) => (
+          <Link
+            href="/admin/horaires"
+            className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
+          >
+            Horaires &amp; jours feries
+          </Link>
+          <Link
+            href="/admin/coordonnees"
+            className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
+          >
+            Coordonnees &amp; reseaux
+          </Link>
+          {["Elèves & clientes", "Contenus & photos du site"].map((label) => (
             <div
               key={label}
               className="border border-dashed border-[var(--ligne)] bg-white p-5 text-sm text-[var(--gris)]"

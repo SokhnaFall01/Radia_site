@@ -33,11 +33,22 @@ export default async function AdminFormationsPage({
           Impossible de supprimer cette formation : des sessions ou inscriptions y sont liees.
         </p>
       )}
+      {erreur === "photo" && (
+        <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
+          Photo invalide (jpg/png/webp, 5 Mo max).
+        </p>
+      )}
 
       <ul className="mt-8 flex flex-col gap-3">
         {formations.map((f) => (
-          <li key={f.id} className="flex items-center justify-between border border-[var(--ligne)] bg-white p-4 text-sm">
-            <div>
+          <li key={f.id} className="flex items-center justify-between gap-4 border border-[var(--ligne)] bg-white p-4 text-sm">
+            {f.photos[0] ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={f.photos[0]} alt="" className="h-14 w-14 shrink-0 object-cover" />
+            ) : (
+              <div className="h-14 w-14 shrink-0 bg-[var(--blush)]" />
+            )}
+            <div className="flex-1">
               <Link href={`/admin/formations/${f.id}`} className="font-medium hover:text-[var(--brass)]">
                 {f.titre}
               </Link>
@@ -57,10 +68,14 @@ export default async function AdminFormationsPage({
       </ul>
 
       <h2 className="mt-14 font-display text-sm uppercase tracking-[0.12em]">Ajouter une formation</h2>
-      <form action={createFormation} className="mt-6 flex flex-col gap-4">
+      <form action={createFormation} encType="multipart/form-data" className="mt-6 flex flex-col gap-4">
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="titre">Titre</label>
           <input id="titre" name="titre" required className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="photo">Photo</label>
+          <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="description">Description</label>

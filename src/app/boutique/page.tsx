@@ -22,7 +22,16 @@ export default async function BoutiquePage() {
             const stockFaible = !enRupture && produit.stock <= produit.seuilAlerte;
 
             return (
-              <div key={produit.id} className="border border-[var(--noir)] bg-white p-5">
+              <div key={produit.id} className="border border-[var(--noir)] bg-white">
+                {produit.photos[0] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={produit.photos[0]} alt={produit.nom} className="h-44 w-full object-cover" />
+                ) : (
+                  <div className="flex h-44 items-center justify-center bg-gradient-to-br from-[#f0e6dc] to-[#d9c0a8] text-sm italic text-[var(--noir)]/50">
+                    Photo a venir
+                  </div>
+                )}
+                <div className="p-5">
                 <h2 className="font-display text-sm uppercase tracking-[0.1em]">{produit.nom}</h2>
                 <p className="mt-1 text-xs uppercase tracking-[0.1em] text-[var(--gris)]">
                   {produit.categorie}
@@ -56,6 +65,7 @@ export default async function BoutiquePage() {
                     Plus que {produit.stock} en stock
                   </p>
                 )}
+                </div>
               </div>
             );
           })}

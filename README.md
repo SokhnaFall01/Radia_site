@@ -120,17 +120,39 @@ docker compose exec db pg_dump -U radia radia_glam > backup_$(date +%F).sql
   frais fixes), décrément de stock en transaction, suivi de commande côté
   cliente (`espace/commandes`)
 - **Tableau de bord admin** : agenda (staff/admin), et gestion complète
-  (créer/modifier/supprimer) des **formations & sessions**, **prestations**
-  et **produits & stocks** — accessible uniquement au rôle `ADMIN`
-  (`/admin/formations`, `/admin/prestations`, `/admin/produits`)
+  (créer/modifier/supprimer, avec **upload de photo**) des **formations &
+  sessions**, **prestations** et **produits & stocks** — accessible
+  uniquement au rôle `ADMIN` (`/admin/formations`, `/admin/prestations`,
+  `/admin/produits`)
+- **Horaires d'ouverture & jours fériés/congés** (`/admin/horaires`) : jours
+  travaillés et heures par jour de semaine, plus des fermetures
+  exceptionnelles (Tabaski, Korité...)
+- **Réservation avec créneaux réels** : la page `/reservation` calcule les
+  créneaux réellement disponibles à partir des horaires d'ouverture, des
+  jours fériés et des rendez-vous déjà pris (par maquilleuse si choisie,
+  sinon par capacité globale du staff) — plus de champ date/heure libre
+- **Coordonnées & réseaux** (`/admin/coordonnees`) : téléphone, WhatsApp,
+  email, adresse, lien Google Maps, Instagram/TikTok/Facebook — affichés
+  dynamiquement sur `/contact` et dans le pied de page du site
+- Menu mobile (hamburger) et bouton "Administration" visible directement
+  dans l'en-tête pour les comptes admin
 
 Ce qui reste volontairement hors-ligne pour l'instant (documenté dans le code
 et l'UI) : le règlement de la boutique et des inscriptions se fait en espèces
 au salon/à la livraison, en attendant le compte marchand PayDunya/PayTech.
 Il n'y a pas encore d'inscription en libre-service à une formation (l'ajout
 d'un élève à une session se fait aujourd'hui côté base de données/admin), ni
-de codes promo, ni de gestion des photos/textes du site (contenu statique
-pour l'instant) ou des élèves/clientes depuis le tableau de bord.
+de codes promo, ni de gestion des élèves/clientes depuis le tableau de bord,
+ni d'édition des textes libres du site (accueil, à propos...).
+
+### Photos uploadées
+
+Les photos de formations/prestations/produits sont stockées sur le disque du
+serveur (`public/uploads`), pas dans un service cloud. En Docker, ce dossier
+est monté sur un volume nommé (`uploads_data`) pour survivre aux
+redéploiements (`docker compose up -d --build`) — assurez-vous de ne jamais
+faire `docker compose down -v` (le `-v` supprime aussi les volumes, donc les
+photos et la base de données).
 
 ### Devenir administrateur
 
@@ -153,5 +175,5 @@ session au moment de la connexion).
 - Inscription en ligne à une formation (choix de session + paiement/acompte)
 - Hébergement vidéo sécurisé (Mux/Vimeo Pro) pour les leçons
 - Codes promo boutique
-- Gestion des contenus/photos, formations, produits et statistiques depuis le
-  tableau de bord admin (actuellement en lecture seule via la base de données)
+- Gestion des élèves/clientes et statistiques depuis le tableau de bord admin
+- Édition des textes libres du site (accueil, à propos) depuis l'admin

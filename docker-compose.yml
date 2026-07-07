@@ -10,6 +10,8 @@ services:
         condition: service_healthy
     expose:
       - "3000"
+    volumes:
+      - uploads_data:/app/public/uploads
 
   db:
     image: postgres:16-alpine
@@ -45,3 +47,4 @@ volumes:
   db_data:
   caddy_data:
   caddy_config:
+  uploads_data:

@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { verifySession } from "@/lib/dal";
+import { saveUploadedPhoto } from "@/lib/uploads";
+import { CONTACT_KEYS } from "@/lib/contenu";
 
 async function requireAdmin() {
   const session = await verifySession();
@@ -22,10 +24,22 @@ function num(formData: FormData, key: string) {
   return Number.isFinite(v) ? v : 0;
 }
 
+function photoFile(formData: FormData) {
+  const v = formData.get("photo");
+  return v instanceof File ? v : null;
+}
+
 // ---- Formations ----
 
 export async function createFormation(formData: FormData) {
   await requireAdmin();
+
+  let photoUrl: string | null = null;
+  try {
+    photoUrl = await saveUploadedPhoto(photoFile(formData));
+  } catch {
+    redirect("/admin/formations?erreur=photo");
+  }
 
   await prisma.formation.create({
     data: {
@@ -36,15 +50,26 @@ export async function createFormation(formData: FormData) {
       tarifFcfa: num(formData, "tarifFcfa"),
       niveau: str(formData, "niveau"),
       publie: formData.get("publie") === "on",
+      photos: photoUrl ? [photoUrl] : [],
     },
   });
 
   revalidatePath("/admin/formations");
+  revalidatePath("/academy");
   redirect("/admin/formations");
 }
 
 export async function updateFormation(id: string, formData: FormData) {
   await requireAdmin();
+
+  let photoUrl: string | null = null;
+  try {
+    photoUrl = await saveUploadedPhoto(photoFile(formData));
+  } catch {
+    redirect(`/admin/formations/${id}?erreur=photo`);
+  }
+
+  const existing = await prisma.formation.findUnique({ where: { id }, select: { photos: true } });
 
   await prisma.formation.update({
     where: { id },
@@ -56,11 +81,13 @@ export async function updateFormation(id: string, formData: FormData) {
       tarifFcfa: num(formData, "tarifFcfa"),
       niveau: str(formData, "niveau"),
       publie: formData.get("publie") === "on",
+      photos: photoUrl ? [photoUrl] : (existing?.photos ?? []),
     },
   });
 
   revalidatePath("/admin/formations");
   revalidatePath(`/admin/formations/${id}`);
+  revalidatePath("/academy");
   redirect(`/admin/formations/${id}?maj=ok`);
 }
 
@@ -74,6 +101,7 @@ export async function deleteFormation(id: string) {
   }
 
   revalidatePath("/admin/formations");
+  revalidatePath("/academy");
   redirect("/admin/formations");
 }
 
@@ -113,6 +141,13 @@ export async function deleteFormationSession(formationId: string, id: string) {
 export async function createPrestation(formData: FormData) {
   await requireAdmin();
 
+  let photoUrl: string | null = null;
+  try {
+    photoUrl = await saveUploadedPhoto(photoFile(formData));
+  } catch {
+    redirect("/admin/prestations?erreur=photo");
+  }
+
   const acompte = str(formData, "acompteRequis");
 
   await prisma.prestation.create({
@@ -122,6 +157,7 @@ export async function createPrestation(formData: FormData) {
       prixFcfa: num(formData, "prixFcfa"),
       acompteRequis: acompte ? Number(acompte) : null,
       actif: formData.get("actif") === "on",
+      photo: photoUrl,
     },
   });
 
@@ -133,6 +169,14 @@ export async function createPrestation(formData: FormData) {
 export async function updatePrestation(id: string, formData: FormData) {
   await requireAdmin();
 
+  let photoUrl: string | null = null;
+  try {
+    photoUrl = await saveUploadedPhoto(photoFile(formData));
+  } catch {
+    redirect("/admin/prestations?erreur=photo");
+  }
+
+  const existing = await prisma.prestation.findUnique({ where: { id }, select: { photo: true } });
   const acompte = str(formData, "acompteRequis");
 
   await prisma.prestation.update({
@@ -143,6 +187,7 @@ export async function updatePrestation(id: string, formData: FormData) {
       prixFcfa: num(formData, "prixFcfa"),
       acompteRequis: acompte ? Number(acompte) : null,
       actif: formData.get("actif") === "on",
+      photo: photoUrl ?? existing?.photo ?? null,
     },
   });
 
@@ -170,6 +215,13 @@ export async function deletePrestation(id: string) {
 export async function createProduit(formData: FormData) {
   await requireAdmin();
 
+  let photoUrl: string | null = null;
+  try {
+    photoUrl = await saveUploadedPhoto(photoFile(formData));
+  } catch {
+    redirect("/admin/produits?erreur=photo");
+  }
+
   await prisma.produit.create({
     data: {
       nom: str(formData, "nom"),
@@ -177,6 +229,7 @@ export async function createProduit(formData: FormData) {
       categorie: str(formData, "categorie"),
       stock: num(formData, "stock"),
       seuilAlerte: num(formData, "seuilAlerte") || 5,
+      photos: photoUrl ? [photoUrl] : [],
     },
   });
 
@@ -188,6 +241,15 @@ export async function createProduit(formData: FormData) {
 export async function updateProduit(id: string, formData: FormData) {
   await requireAdmin();
 
+  let photoUrl: string | null = null;
+  try {
+    photoUrl = await saveUploadedPhoto(photoFile(formData));
+  } catch {
+    redirect("/admin/produits?erreur=photo");
+  }
+
+  const existing = await prisma.produit.findUnique({ where: { id }, select: { photos: true } });
+
   await prisma.produit.update({
     where: { id },
     data: {
@@ -196,6 +258,7 @@ export async function updateProduit(id: string, formData: FormData) {
       categorie: str(formData, "categorie"),
       stock: num(formData, "stock"),
       seuilAlerte: num(formData, "seuilAlerte") || 5,
+      photos: photoUrl ? [photoUrl] : (existing?.photos ?? []),
     },
   });
 
@@ -216,4 +279,75 @@ export async function deleteProduit(id: string) {
   revalidatePath("/admin/produits");
   revalidatePath("/boutique");
   redirect("/admin/produits");
+}
+
+// ---- Horaires d'ouverture ----
+
+export async function updateHoraires(formData: FormData) {
+  await requireAdmin();
+
+  for (let jour = 0; jour < 7; jour++) {
+    const ouvert = formData.get(`ouvert-${jour}`) === "on";
+    const heureDebut = str(formData, `debut-${jour}`) || "09:00";
+    const heureFin = str(formData, `fin-${jour}`) || "18:00";
+
+    await prisma.horaireOuverture.upsert({
+      where: { jour },
+      update: { ouvert, heureDebut, heureFin },
+      create: { jour, ouvert, heureDebut, heureFin },
+    });
+  }
+
+  revalidatePath("/admin/horaires");
+  revalidatePath("/reservation");
+  redirect("/admin/horaires?maj=ok");
+}
+
+export async function createJourFerme(formData: FormData) {
+  await requireAdmin();
+
+  const dateStr = str(formData, "date");
+  if (!dateStr) redirect("/admin/horaires");
+
+  try {
+    await prisma.jourFerme.create({
+      data: { date: new Date(`${dateStr}T00:00:00.000Z`), motif: str(formData, "motif") || null },
+    });
+  } catch {
+    redirect("/admin/horaires?erreur=doublon");
+  }
+
+  revalidatePath("/admin/horaires");
+  revalidatePath("/reservation");
+  redirect("/admin/horaires");
+}
+
+export async function deleteJourFerme(id: string) {
+  await requireAdmin();
+
+  await prisma.jourFerme.delete({ where: { id } });
+
+  revalidatePath("/admin/horaires");
+  revalidatePath("/reservation");
+  redirect("/admin/horaires");
+}
+
+// ---- Coordonnees ----
+
+export async function updateCoordonnees(formData: FormData) {
+  await requireAdmin();
+
+  for (const [name, cle] of Object.entries(CONTACT_KEYS)) {
+    const valeur = str(formData, name);
+    await prisma.contenuSite.upsert({
+      where: { cle },
+      update: { valeur },
+      create: { cle, valeur },
+    });
+  }
+
+  revalidatePath("/admin/coordonnees");
+  revalidatePath("/contact");
+  revalidatePath("/");
+  redirect("/admin/coordonnees?maj=ok");
 }

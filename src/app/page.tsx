@@ -68,9 +68,14 @@ export default async function Home() {
             <div className="mt-14 grid gap-8 sm:grid-cols-3">
               {prestations.map((p) => (
                 <div key={p.id} className="border border-[var(--ligne)]">
-                  <div className="flex h-52 items-center justify-center bg-gradient-to-br from-[var(--blush)] to-[#c9a98f] text-sm italic text-[var(--noir)]/50">
-                    Photo a venir
-                  </div>
+                  {p.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={p.photo} alt={p.nom} className="h-52 w-full object-cover" />
+                  ) : (
+                    <div className="flex h-52 items-center justify-center bg-gradient-to-br from-[var(--blush)] to-[#c9a98f] text-sm italic text-[var(--noir)]/50">
+                      Photo a venir
+                    </div>
+                  )}
                   <div className="p-6">
                     <h3 className="text-sm uppercase tracking-[0.14em]">{p.nom}</h3>
                     <p className="font-italic-serif mt-4 text-lg text-[var(--brass)]">
@@ -108,9 +113,14 @@ export default async function Home() {
             <div className="flex gap-6 overflow-x-auto pb-4">
               {formations.map((f) => (
                 <div key={f.id} className="w-72 shrink-0">
-                  <div className="flex h-72 items-center justify-center bg-gradient-to-br from-[#d9c4b2] to-[#8f6f55] text-sm italic text-white/70">
-                    Photo a venir
-                  </div>
+                  {f.photos[0] ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={f.photos[0]} alt={f.titre} className="h-72 w-full object-cover" />
+                  ) : (
+                    <div className="flex h-72 items-center justify-center bg-gradient-to-br from-[#d9c4b2] to-[#8f6f55] text-sm italic text-white/70">
+                      Photo a venir
+                    </div>
+                  )}
                   <div className="mt-3 flex items-center justify-center gap-3 bg-[var(--blush)] py-3 text-xs uppercase tracking-[0.06em]">
                     <span>{f.duree}</span>
                     <span>·</span>
@@ -239,9 +249,14 @@ export default async function Home() {
                 const enRupture = produit.stock <= 0;
                 return (
                   <div key={produit.id} className="border border-[var(--ligne)] bg-white text-center">
-                    <div className="flex h-44 items-center justify-center bg-gradient-to-br from-[#f0e6dc] to-[#d9c0a8] text-sm italic text-[var(--noir)]/50">
-                      Photo produit
-                    </div>
+                    {produit.photos[0] ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={produit.photos[0]} alt={produit.nom} className="h-44 w-full object-cover" />
+                    ) : (
+                      <div className="flex h-44 items-center justify-center bg-gradient-to-br from-[#f0e6dc] to-[#d9c0a8] text-sm italic text-[var(--noir)]/50">
+                        Photo produit
+                      </div>
+                    )}
                     <div className="p-5">
                       <p className="text-xs uppercase tracking-[0.2em] text-[var(--brass)]">
                         {produit.categorie}

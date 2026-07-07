@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/dal";
 import { logout } from "@/lib/actions/auth";
+import MobileNav from "@/components/mobile-nav";
 
 const navLinks = [
   { href: "/", label: "Accueil" },
@@ -33,11 +34,14 @@ export default async function Header() {
   const user = await getCurrentUser();
 
   return (
-    <header className="border-b border-[var(--ligne)] bg-[var(--porcelaine)]">
+    <header className="relative border-b border-[var(--ligne)] bg-[var(--porcelaine)]">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <Link href="/" className="font-display text-sm tracking-[0.22em] uppercase">
-          Radia Glam
-        </Link>
+        <div className="flex items-center gap-4">
+          <MobileNav navLinks={navLinks} />
+          <Link href="/" className="font-display text-sm tracking-[0.22em] uppercase">
+            Radia Glam
+          </Link>
+        </div>
         <nav className="hidden gap-8 text-xs tracking-[0.1em] uppercase md:flex">
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href} className="hover:text-[var(--brass)]">
@@ -48,6 +52,14 @@ export default async function Header() {
         <div className="flex items-center gap-4 text-xs uppercase tracking-[0.1em]">
           {user ? (
             <>
+              {user.role === "ADMIN" && (
+                <Link
+                  href="/admin"
+                  className="border border-[var(--noir)] px-4 py-2 hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
+                >
+                  Administration
+                </Link>
+              )}
               <Link
                 href={user.role === "CLIENTE" ? "/espace" : "/admin"}
                 className="hover:text-[var(--brass)]"
