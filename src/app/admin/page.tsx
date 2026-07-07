@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { verifySession } from "@/lib/dal";
 import { prisma } from "@/lib/db";
@@ -47,19 +48,32 @@ export default async function AdminPage() {
 
       {!isStaffOnly && (
         <div className="mt-14 grid gap-4 sm:grid-cols-2">
-          {[
-            "Formations",
-            "Produits & stocks",
-            "Elèves & clientes",
-            "Contenus du site & photos",
-          ].map((label) => (
+          <Link
+            href="/admin/formations"
+            className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
+          >
+            Formations &amp; sessions
+          </Link>
+          <Link
+            href="/admin/prestations"
+            className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
+          >
+            Prestations (salon)
+          </Link>
+          <Link
+            href="/admin/produits"
+            className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
+          >
+            Produits &amp; stocks
+          </Link>
+          {["Elèves & clientes", "Contenus du site & photos"].map((label) => (
             <div
               key={label}
               className="border border-dashed border-[var(--ligne)] bg-white p-5 text-sm text-[var(--gris)]"
             >
               {label}
               <span className="ml-2 text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
-                Phase 2/3
+                A venir
               </span>
             </div>
           ))}

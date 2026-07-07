@@ -119,15 +119,30 @@ docker compose exec db pg_dump -U radia radia_glam > backup_$(date +%F).sql
   automatique, panier, commande (retrait au salon ou livraison à Dakar avec
   frais fixes), décrément de stock en transaction, suivi de commande côté
   cliente (`espace/commandes`)
-- Tableau de bord staff/admin (agenda) — gestion formations/produits/contenus
-  à venir
+- **Tableau de bord admin** : agenda (staff/admin), et gestion complète
+  (créer/modifier/supprimer) des **formations & sessions**, **prestations**
+  et **produits & stocks** — accessible uniquement au rôle `ADMIN`
+  (`/admin/formations`, `/admin/prestations`, `/admin/produits`)
 
 Ce qui reste volontairement hors-ligne pour l'instant (documenté dans le code
 et l'UI) : le règlement de la boutique et des inscriptions se fait en espèces
 au salon/à la livraison, en attendant le compte marchand PayDunya/PayTech.
 Il n'y a pas encore d'inscription en libre-service à une formation (l'ajout
-d'un élève à une session se fait aujourd'hui côté base de données/admin) ni
-de codes promo.
+d'un élève à une session se fait aujourd'hui côté base de données/admin), ni
+de codes promo, ni de gestion des photos/textes du site (contenu statique
+pour l'instant) ou des élèves/clientes depuis le tableau de bord.
+
+### Devenir administrateur
+
+Il n'y a pas d'auto-promotion possible (sécurité) : créez un compte via
+`/inscription`, puis en base de données :
+
+```sql
+UPDATE "User" SET role='ADMIN' WHERE email='votre-email@exemple.com';
+```
+
+Déconnectez-vous et reconnectez-vous ensuite (le rôle est lu depuis la
+session au moment de la connexion).
 
 ## Prochaines étapes (hors scope de ce squelette)
 
