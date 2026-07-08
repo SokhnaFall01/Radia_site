@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getCreneauxDisponibles } from "@/lib/creneaux";
 import { reserver } from "@/lib/actions/reservation";
@@ -40,6 +41,13 @@ export default async function ReservationPage({
       <p className="mt-4 text-[var(--gris)]">
         Choisissez une prestation, une maquilleuse (optionnel) et une date pour voir les creneaux
         disponibles.
+      </p>
+      <p className="mt-3 text-sm text-[var(--gris)]">
+        Pour un mariage, un Henne Time ou un evenement particulier,{" "}
+        <Link href="/devis" className="border-b border-[var(--brass)]">
+          demandez plutot un devis sur mesure
+        </Link>
+        .
       </p>
 
       {prestations.length === 0 ? (

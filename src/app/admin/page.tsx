@@ -19,6 +19,10 @@ export default async function AdminPage() {
     take: 20,
   });
 
+  const devisNouveaux = isStaffOnly
+    ? 0
+    : await prisma.demandeDevis.count({ where: { statut: "NOUVEAU" } });
+
   return (
     <section className="mx-auto max-w-4xl px-6 py-20">
       <h1 className="font-display text-2xl uppercase tracking-[0.12em]">
@@ -95,6 +99,17 @@ export default async function AdminPage() {
             className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
           >
             Statistiques
+          </Link>
+          <Link
+            href="/admin/devis"
+            className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
+          >
+            Demandes de devis
+            {devisNouveaux > 0 && (
+              <span className="ml-2 bg-[var(--brass)] px-2 py-0.5 text-xs text-white">
+                {devisNouveaux} nouveau{devisNouveaux > 1 ? "x" : ""}
+              </span>
+            )}
           </Link>
         </div>
       )}

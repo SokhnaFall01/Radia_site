@@ -88,6 +88,21 @@ enum StatutEnvoi {
   ECHOUE
 }
 
+enum TypeEvenement {
+  MARIAGE
+  HENNE
+  MAQUILLAGE_SIMPLE
+  AUTRE
+}
+
+enum StatutDevis {
+  NOUVEAU
+  EN_COURS
+  ENVOYE
+  ACCEPTE
+  REFUSE
+}
+
 model User {
   id           String   @id @default(cuid())
   nom          String
@@ -106,6 +121,7 @@ model User {
   notifications     Notification[]
   certificats       Certificat[]
   progressions      Progression[]
+  demandesDevis     DemandeDevis[]
 
   @@index([role])
 }
@@ -230,6 +246,24 @@ model RendezVous {
 
   @@index([date])
   @@index([maquilleuseId])
+}
+
+model DemandeDevis {
+  id            String        @id @default(cuid())
+  nom           String
+  telephone     String
+  email         String?
+  typeEvenement TypeEvenement
+  precision     String?
+  date          DateTime
+  ville         String
+  message       String?
+  statut        StatutDevis   @default(NOUVEAU)
+  createdAt     DateTime      @default(now())
+  user          User?         @relation(fields: [userId], references: [id])
+  userId        String?
+
+  @@index([statut])
 }
 
 model Produit {

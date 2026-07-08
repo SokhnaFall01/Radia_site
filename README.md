@@ -111,6 +111,10 @@ docker compose exec db pg_dump -U radia radia_glam > backup_$(date +%F).sql
 - Catalogue Academy (lecture) — inscriptions en ligne + paiement à venir
 - Réservation salon (choix prestation, maquilleuse optionnelle, créneau) —
   crée la demande de rendez-vous ; confirmée manuellement par le salon
+- **Demande de devis** (`/devis`) : pour un mariage, un Henné Time ou un
+  événement sur mesure — type d'événement, date, ville, contact, message —
+  accessible sans compte, gérée depuis `/admin/devis` (changement de statut,
+  badge "nouveau" sur le tableau de bord)
 - **Espace élève (LMS)** : formations de l'élève avec barre de progression,
   leçons (vidéo/PDF), quiz noté (70% requis pour valider), génération
   automatique d'un **certificat PDF réel** téléchargeable dès que toutes les

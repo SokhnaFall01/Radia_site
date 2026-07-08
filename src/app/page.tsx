@@ -54,6 +54,12 @@ export default async function Home() {
             >
               S&apos;inscrire a une formation
             </Link>
+            <Link
+              href="/boutique"
+              className="border border-[var(--noir)] bg-[var(--porcelaine)] px-8 py-4 text-xs uppercase tracking-[0.18em]"
+            >
+              Acheter nos produits
+            </Link>
           </div>
         </div>
       </section>
@@ -102,6 +108,19 @@ export default async function Home() {
               ))}
             </div>
           )}
+
+          <div className="mt-14 border border-dashed border-[var(--brass)] bg-[var(--blush)] p-8 text-center">
+            <p className="text-sm text-[var(--gris)]">
+              Mariage, Henne Time, evenement particulier ? Decrivez votre projet et recevez une
+              proposition sur mesure.
+            </p>
+            <Link
+              href="/devis"
+              className="mt-5 inline-block border border-[var(--noir)] bg-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.14em] text-[var(--porcelaine)]"
+            >
+              Demander un devis
+            </Link>
+          </div>
         </div>
       </section>
 

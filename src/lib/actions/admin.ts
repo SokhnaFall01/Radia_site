@@ -453,3 +453,23 @@ export async function updateUserRole(userId: string, formData: FormData) {
   revalidatePath(`/admin/clients/${userId}`);
   redirect(`/admin/clients/${userId}?maj=ok`);
 }
+
+// ---- Devis ----
+
+type StatutDevisValue = "NOUVEAU" | "EN_COURS" | "ENVOYE" | "ACCEPTE" | "REFUSE";
+const STATUTS_DEVIS: StatutDevisValue[] = ["NOUVEAU", "EN_COURS", "ENVOYE", "ACCEPTE", "REFUSE"];
+
+export async function updateDevisStatut(id: string, formData: FormData) {
+  await requireAdmin();
+
+  const statut = str(formData, "statut");
+  if (!STATUTS_DEVIS.includes(statut as StatutDevisValue)) redirect("/admin/devis");
+
+  await prisma.demandeDevis.update({
+    where: { id },
+    data: { statut: statut as StatutDevisValue },
+  });
+
+  revalidatePath("/admin/devis");
+  redirect("/admin/devis?maj=ok");
+}
