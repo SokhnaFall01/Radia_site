@@ -6,10 +6,10 @@ import MobileNav from "@/components/mobile-nav";
 const navLinks = [
   { href: "/", label: "Accueil" },
   { href: "/academy", label: "Academy" },
-  { href: "/reservation", label: "Reservation" },
+  { href: "/reservation", label: "Réservation" },
   { href: "/boutique", label: "Boutique" },
   { href: "/galerie", label: "Galerie" },
-  { href: "/a-propos", label: "A propos" },
+  { href: "/a-propos", label: "À propos" },
   { href: "/contact", label: "Contact" },
 ];
 

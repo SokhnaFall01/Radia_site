@@ -26,7 +26,7 @@ export default async function MesFormationsPage() {
 
       {inscriptions.length === 0 ? (
         <p className="mt-6 text-sm text-[var(--gris)]">
-          Vous n&apos;etes inscrite a aucune formation pour le moment.{" "}
+          Vous n&apos;êtes inscrite à aucune formation pour le moment.{" "}
           <Link href="/academy" className="underline">
             Voir le catalogue
           </Link>
@@ -52,7 +52,7 @@ export default async function MesFormationsPage() {
                   <div className="h-1.5 bg-[var(--brass)]" style={{ width: `${pct}%` }} />
                 </div>
                 <p className="mt-2 text-xs uppercase tracking-[0.1em] text-[var(--gris)]">
-                  {done} / {total} lecons terminees ({pct}%)
+                  {done} / {total} leçons terminées ({pct}%)
                 </p>
               </li>
             );

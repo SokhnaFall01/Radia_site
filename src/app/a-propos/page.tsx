@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getSiteTextes } from "@/lib/contenuTextes";
 
-export const metadata = { title: "A propos — Radia Glam" };
+export const metadata = { title: "À propos — Radia Glam" };
 
 export default async function AProposPage() {
   const t = await getSiteTextes();
@@ -39,7 +39,7 @@ export default async function AProposPage() {
               href="/academy"
               className="mt-8 inline-block border border-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.14em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
             >
-              Decouvrir l&apos;Academy
+              Découvrir l&apos;Academy
             </Link>
           </div>
         </div>
@@ -69,9 +69,9 @@ export default async function AProposPage() {
           </div>
           <div className="grid gap-8 sm:grid-cols-3">
             {[
-              { titre: "Exigence", texte: "Chaque prestation et chaque formation repond a un standard professionnel exigeant." },
-              { titre: "Transmission", texte: "Former la nouvelle generation de maquilleuses, techniques et creatives." },
-              { titre: "Authenticite", texte: "Sublimer chaque carnation, chaque style, chaque histoire." },
+              { titre: "Exigence", texte: "Chaque prestation et chaque formation répond à un standard professionnel exigeant." },
+              { titre: "Transmission", texte: "Former la nouvelle génération de maquilleuses, techniques et créatives." },
+              { titre: "Authenticité", texte: "Sublimer chaque carnation, chaque style, chaque histoire." },
             ].map((v) => (
               <div key={v.titre} className="border border-[var(--noir)] p-8 text-center">
                 <h3 className="font-display text-sm uppercase tracking-[0.14em]">{v.titre}</h3>

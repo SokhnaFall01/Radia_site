@@ -4,10 +4,10 @@ import { getCoordonnees } from "@/lib/contenu";
 const NAV_LINKS = [
   { href: "/", label: "Accueil" },
   { href: "/academy", label: "Academy" },
-  { href: "/reservation", label: "Reservation" },
+  { href: "/reservation", label: "Réservation" },
   { href: "/boutique", label: "Boutique" },
   { href: "/galerie", label: "Galerie" },
-  { href: "/a-propos", label: "A propos" },
+  { href: "/a-propos", label: "À propos" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -52,7 +52,7 @@ export default async function Footer() {
               {c.adresse && <li>{c.adresse}</li>}
             </ul>
           ) : (
-            <p className="mt-3 text-white/50">A venir</p>
+            <p className="mt-3 text-white/50">À venir</p>
           )}
 
           {hasSocial && (

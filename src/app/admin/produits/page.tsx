@@ -27,17 +27,17 @@ export default async function AdminProduitsPage({
 
       {maj === "ok" && (
         <p className="mt-4 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
-          Produit mis a jour.
+          Produit mis à jour.
         </p>
       )}
       {erreur === "suppression" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Impossible de supprimer : ce produit apparait dans des commandes existantes.
+          Impossible de supprimer : ce produit apparaît dans des commandes existantes.
         </p>
       )}
       {erreur === "photo" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Photo invalide (jpg/png/webp, 5 Mo max).
+          Photo invalide (jpg/png/webp, 10 Mo max).
         </p>
       )}
 
@@ -58,7 +58,7 @@ export default async function AdminProduitsPage({
                 <input name="nom" defaultValue={p.nom} required className="mt-1 block border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="text-xs uppercase tracking-[0.1em]">Categorie</label>
+                <label className="text-xs uppercase tracking-[0.1em]">Catégorie</label>
                 <input name="categorie" defaultValue={p.categorie} required className="mt-1 block border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
               </div>
               <div>
@@ -105,7 +105,7 @@ export default async function AdminProduitsPage({
           <input id="nom" name="nom" required className="mt-1 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="categorie">Categorie</label>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="categorie">Catégorie</label>
           <input id="categorie" name="categorie" required className="mt-1 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>

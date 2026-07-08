@@ -8,9 +8,9 @@ export const metadata = { title: "Statistiques — Administration" };
 const STATUT_RDV_LABEL: Record<string, string> = {
   EN_ATTENTE: "En attente",
   CONFIRME: "Confirme",
-  HONORE: "Honore",
+  HONORE: "Honoré",
   ABSENT: "Absent",
-  ANNULE: "Annule",
+  ANNULE: "Annulé",
 };
 
 export default async function AdminStatistiquesPage() {
@@ -74,7 +74,7 @@ export default async function AdminStatistiquesPage() {
           <p className="mt-1 text-xs text-[var(--gris)]">{commandeAgg._count} commande(s)</p>
         </div>
         <div className="border border-[var(--noir)] bg-white p-5">
-          <p className="text-xs uppercase tracking-[0.1em] text-[var(--gris)]">CA Salon (estime)</p>
+          <p className="text-xs uppercase tracking-[0.1em] text-[var(--gris)]">CA Salon (estimé)</p>
           <p className="font-display mt-2 text-2xl">{caSalon.toLocaleString("fr-FR")} FCFA</p>
           <p className="mt-1 text-xs text-[var(--gris)]">{rdvNonAnnules.length} rendez-vous</p>
         </div>
@@ -96,7 +96,7 @@ export default async function AdminStatistiquesPage() {
           const produit = produitById.get(v.produitId);
           return (
             <li key={v.produitId} className="flex justify-between border border-[var(--ligne)] bg-white p-4 text-sm">
-              <span>{produit?.nom ?? "Produit supprime"}</span>
+              <span>{produit?.nom ?? "Produit supprimé"}</span>
               <span className="text-[var(--brass)]">{v._sum.quantite} vendu(s)</span>
             </li>
           );
@@ -127,7 +127,7 @@ export default async function AdminStatistiquesPage() {
       <ul className="mt-4 flex flex-col gap-2">
         {rdvParMaquilleuseRaw.map((r) => (
           <li key={r.maquilleuseId} className="flex justify-between border border-[var(--ligne)] bg-white p-4 text-sm">
-            <span>{staffById.get(r.maquilleuseId!) ?? "Staff supprime"}</span>
+            <span>{staffById.get(r.maquilleuseId!) ?? "Staff supprimé"}</span>
             <span className="text-[var(--brass)]">{r._count} rendez-vous</span>
           </li>
         ))}

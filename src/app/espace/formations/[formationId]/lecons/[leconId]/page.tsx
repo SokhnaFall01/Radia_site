@@ -51,14 +51,14 @@ export default async function LeconPage({
           href={lecon.pdfUrl}
           className="mt-4 inline-block border border-[var(--noir)] px-5 py-3 text-xs uppercase tracking-[0.1em]"
         >
-          Telecharger le support PDF
+          Télécharger le support PDF
         </a>
       )}
 
       {score !== undefined && (
         <p className="mt-6 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
           Score obtenu : {score}%{" "}
-          {progression?.terminee ? "— lecon validee." : "— 70% minimum requis pour valider."}
+          {progression?.terminee ? "— leçon validée." : "— 70% minimum requis pour valider."}
         </p>
       )}
 
@@ -71,7 +71,7 @@ export default async function LeconPage({
             disabled={progression?.terminee}
             className="border border-[var(--noir)] bg-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.12em] text-[var(--porcelaine)] disabled:opacity-50"
           >
-            {progression?.terminee ? "Lecon terminee" : "Marquer comme terminee"}
+            {progression?.terminee ? "Leçon terminée" : "Marquer comme terminée"}
           </button>
         </form>
       )}

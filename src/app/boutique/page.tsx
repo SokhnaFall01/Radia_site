@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { getSiteTextes } from "@/lib/contenuTextes";
 import { ajouterAuPanier } from "@/lib/actions/cart";
 import SortSelect from "./sort-select";
 import type { Prisma } from "@/generated/prisma/client";
@@ -21,7 +22,8 @@ export default async function BoutiquePage({
   const { categorie, tri } = await searchParams;
   const triActif = tri && ORDER_BY[tri] ? tri : "recent";
 
-  const [produits, categoriesBrutes] = await Promise.all([
+  const [t, produits, categoriesBrutes] = await Promise.all([
+    getSiteTextes(),
     prisma.produit.findMany({
       where: categorie ? { categorie } : undefined,
       orderBy: ORDER_BY[triActif],
@@ -32,8 +34,8 @@ export default async function BoutiquePage({
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
-      <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Boutique</h1>
-      <p className="mt-4 text-[var(--gris)]">Maquillage, pinceaux et accessoires Radia Glam.</p>
+      <h1 className="font-display text-2xl uppercase tracking-[0.12em]">{t.boutiqueTitre}</h1>
+      <p className="mt-4 text-[var(--gris)]">{t.boutiqueIntro}</p>
 
       {categories.length > 0 && (
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-b border-[var(--ligne)] pb-6">
@@ -61,7 +63,7 @@ export default async function BoutiquePage({
       {produits.length === 0 ? (
         <p className="mt-10 text-sm text-[var(--gris)]">
           {categorie
-            ? "Aucun produit dans cette categorie pour le moment."
+            ? "Aucun produit dans cette catégorie pour le moment."
             : "Aucun produit disponible pour le moment. Ajoutez-en depuis le tableau de bord admin."}
         </p>
       ) : (
@@ -82,7 +84,7 @@ export default async function BoutiquePage({
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center bg-gradient-to-br from-[#f0e6dc] to-[#d9c0a8] text-sm italic text-[var(--noir)]/50">
-                      Photo a venir
+                      Photo à venir
                     </div>
                   )}
                   <span className="absolute left-3 top-3 bg-[var(--porcelaine)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--brass)]">

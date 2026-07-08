@@ -43,7 +43,7 @@ export default async function FormationEspacePage({
           href={`/api/certificats/${certificat.id}`}
           className="mt-6 inline-block border border-[var(--brass)] bg-[var(--blush)] px-5 py-3 text-xs uppercase tracking-[0.1em]"
         >
-          Telecharger mon certificat ({certificat.numero})
+          Télécharger mon certificat ({certificat.numero})
         </a>
       )}
 
@@ -58,7 +58,7 @@ export default async function FormationEspacePage({
               >
                 <span>{lecon.titre}</span>
                 <span className="text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
-                  {p?.terminee ? "Termine" : "A faire"}
+                  {p?.terminee ? "Terminé" : "À faire"}
                 </span>
               </Link>
             </li>

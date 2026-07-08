@@ -15,7 +15,7 @@ export default async function ContactPage() {
     <section className="mx-auto max-w-3xl px-6 py-20">
       <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Contact</h1>
       <p className="mt-4 text-[var(--gris)]">
-        Une question, une envie particuliere ? Contactez-nous directement.
+        Une question, une envie particulière ? Contactez-nous directement.
       </p>
 
       <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -47,7 +47,7 @@ export default async function ContactPage() {
 
       {!c.whatsapp && !c.email && !c.telephone && (
         <p className="mt-8 text-sm text-[var(--gris)]">
-          Coordonnees a venir. Ajoutez-les depuis le tableau de bord admin.
+          Coordonnées à venir. Ajoutez-les depuis le tableau de bord admin.
         </p>
       )}
 
@@ -55,14 +55,14 @@ export default async function ContactPage() {
         <div>
           <h2 className="font-display text-sm uppercase tracking-[0.12em]">Adresse</h2>
           <p className="mt-3 text-sm text-[var(--gris)]">
-            {c.adresse || "A venir"}
+            {c.adresse || "À venir"}
           </p>
           {c.mapsUrl && (
             <a
               href={c.mapsUrl}
               className="mt-3 inline-block border-b border-[var(--brass)] text-xs uppercase tracking-[0.14em]"
             >
-              Itineraire
+              Itinéraire
             </a>
           )}
 
@@ -72,7 +72,7 @@ export default async function ContactPage() {
             {c.tiktok && <a href={c.tiktok} className="border-b border-[var(--brass)]">TikTok</a>}
             {c.facebook && <a href={c.facebook} className="border-b border-[var(--brass)]">Facebook</a>}
             {!c.instagram && !c.tiktok && !c.facebook && (
-              <span className="text-[var(--gris)] normal-case">A venir</span>
+              <span className="text-[var(--gris)] normal-case">À venir</span>
             )}
           </div>
         </div>
@@ -85,7 +85,7 @@ export default async function ContactPage() {
               return (
                 <li key={jour} className="flex justify-between capitalize">
                   <span>{label}</span>
-                  <span>{h && h.ouvert ? `${h.heureDebut} — ${h.heureFin}` : "Ferme"}</span>
+                  <span>{h && h.ouvert ? `${h.heureDebut} — ${h.heureFin}` : "Fermé"}</span>
                 </li>
               );
             })}

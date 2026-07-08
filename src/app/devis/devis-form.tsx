@@ -15,7 +15,7 @@ export default function DevisForm() {
     <form action={action} className="mt-10 flex flex-col gap-5">
       <div>
         <label className="text-xs uppercase tracking-[0.1em]" htmlFor="typeEvenement">
-          Type d&apos;evenement
+          Type d&apos;événement
         </label>
         <select
           id="typeEvenement"
@@ -25,7 +25,7 @@ export default function DevisForm() {
           className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm"
         >
           <option value="MARIAGE">Mariage</option>
-          <option value="HENNE">Henne Time</option>
+          <option value="HENNE">Henné Time</option>
           <option value="MAQUILLAGE_SIMPLE">Maquillage simple</option>
           <option value="AUTRE">Autre</option>
         </select>
@@ -34,7 +34,7 @@ export default function DevisForm() {
       {typeEvenement === "AUTRE" && (
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="precision">
-            Precisez
+            Précisez
           </label>
           <input
             id="precision"
@@ -48,7 +48,7 @@ export default function DevisForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="date">
-            Date souhaitee
+            Date souhaitée
           </label>
           <input
             id="date"
@@ -87,7 +87,7 @@ export default function DevisForm() {
         </div>
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="telephone">
-            Telephone
+            Téléphone
           </label>
           <input
             id="telephone"
@@ -113,13 +113,13 @@ export default function DevisForm() {
 
       <div>
         <label className="text-xs uppercase tracking-[0.1em]" htmlFor="message">
-          Details (optionnel)
+          Détails (optionnel)
         </label>
         <textarea
           id="message"
           name="message"
           rows={4}
-          placeholder="Nombre de personnes, prestations souhaitees, budget approximatif..."
+          placeholder="Nombre de personnes, prestations souhaitées, budget approximatif..."
           className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm"
         />
       </div>

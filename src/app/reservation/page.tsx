@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { getSiteTextes } from "@/lib/contenuTextes";
 import { getCreneauxDisponibles } from "@/lib/creneaux";
 import { reserver } from "@/lib/actions/reservation";
 
-export const metadata = { title: "Reservation — Radia Glam" };
+export const metadata = { title: "Réservation — Radia Glam" };
 
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
@@ -21,7 +22,8 @@ export default async function ReservationPage({
 }) {
   const { prestationId, maquilleuseId, date, erreur } = await searchParams;
 
-  const [prestations, maquilleuses] = await Promise.all([
+  const [t, prestations, maquilleuses] = await Promise.all([
+    getSiteTextes(),
     prisma.prestation.findMany({ where: { actif: true }, orderBy: { nom: "asc" } }),
     prisma.user.findMany({ where: { role: "STAFF" }, select: { id: true, nom: true } }),
   ]);
@@ -37,15 +39,12 @@ export default async function ReservationPage({
 
   return (
     <section className="mx-auto max-w-3xl px-6 py-20">
-      <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Reserver une prestation</h1>
-      <p className="mt-4 text-[var(--gris)]">
-        Choisissez une prestation, une maquilleuse (optionnel) et une date pour voir les creneaux
-        disponibles.
-      </p>
+      <h1 className="font-display text-2xl uppercase tracking-[0.12em]">{t.reservationTitre}</h1>
+      <p className="mt-4 text-[var(--gris)]">{t.reservationIntro}</p>
       <p className="mt-3 text-sm text-[var(--gris)]">
-        Pour un mariage, un Henne Time ou un evenement particulier,{" "}
+        Pour un mariage, un Henné Time ou un événement particulier,{" "}
         <Link href="/devis" className="border-b border-[var(--brass)]">
-          demandez plutot un devis sur mesure
+          demandez plutôt un devis sur mesure
         </Link>
         .
       </p>
@@ -90,7 +89,7 @@ export default async function ReservationPage({
                   defaultValue={maquilleuseId ?? ""}
                   className="mt-1 border border-[var(--noir)] bg-white px-3 py-2 text-sm"
                 >
-                  <option value="">Sans preference</option>
+                  <option value="">Sans préférence</option>
                   {maquilleuses.map((m) => (
                     <option key={m.id} value={m.id}>
                       {m.nom}
@@ -119,20 +118,20 @@ export default async function ReservationPage({
               type="submit"
               className="border border-[var(--noir)] bg-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.12em] text-[var(--porcelaine)]"
             >
-              Voir les creneaux
+              Voir les créneaux
             </button>
           </form>
 
           {erreur === "indisponible" && (
             <p className="mt-6 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-              Ce creneau vient d&apos;etre pris. Merci d&apos;en choisir un autre.
+              Ce créneau vient d&apos;être pris. Merci d&apos;en choisir un autre.
             </p>
           )}
 
           {creneauxResult && selectedPrestation && date && (
             <div className="mt-10">
               <h2 className="font-display text-sm uppercase tracking-[0.12em]">
-                Creneaux disponibles —{" "}
+                Créneaux disponibles —{" "}
                 {new Date(`${date}T00:00:00.000Z`).toLocaleDateString("fr-FR", {
                   weekday: "long",
                   day: "numeric",
@@ -145,7 +144,7 @@ export default async function ReservationPage({
                 <p className="mt-4 text-sm text-[var(--gris)]">{creneauxResult.motif}</p>
               ) : creneauxResult.creneaux.length === 0 ? (
                 <p className="mt-4 text-sm text-[var(--gris)]">
-                  Plus aucun creneau disponible ce jour-la. Essayez une autre date.
+                  Plus aucun créneau disponible ce jour-là. Essayez une autre date.
                 </p>
               ) : (
                 <div className="mt-4 flex flex-wrap gap-3">
@@ -166,9 +165,9 @@ export default async function ReservationPage({
               )}
 
               <p className="mt-6 text-xs text-[var(--gris)]">
-                Le paiement en ligne (Wave / Orange Money) sera active des la connexion du compte
-                marchand PayDunya/PayTech. Pour l&apos;instant, votre demande est enregistree et
-                confirmee par le salon.
+                Le paiement en ligne (Wave / Orange Money) sera activé dès la connexion du compte
+                marchand PayDunya/PayTech. Pour l&apos;instant, votre demande est enregistrée et
+                confirmée par le salon.
               </p>
             </div>
           )}

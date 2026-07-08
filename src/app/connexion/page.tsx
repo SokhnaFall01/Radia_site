@@ -50,7 +50,7 @@ export default function ConnexionPage() {
       <p className="mt-6 text-sm text-[var(--gris)]">
         Pas encore de compte ?{" "}
         <Link href="/inscription" className="underline">
-          Creer un compte
+          Créer un compte
         </Link>
       </p>
     </section>

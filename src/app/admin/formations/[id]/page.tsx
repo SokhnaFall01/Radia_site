@@ -37,18 +37,18 @@ export default async function AdminFormationEditPage({
 
       {maj === "ok" && (
         <p className="mt-4 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
-          Formation mise a jour.
+          Formation mise à jour.
         </p>
       )}
       {erreur === "suppression" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Impossible de supprimer cette session : des inscriptions y sont liees.
+          Impossible de supprimer cette session : des inscriptions y sont liées.
         </p>
       )}
 
       {erreur === "photo" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Photo invalide (jpg/png/webp, 5 Mo max).
+          Photo invalide (jpg/png/webp, 10 Mo max).
         </p>
       )}
 
@@ -66,16 +66,28 @@ export default async function AdminFormationEditPage({
           <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" className="mt-2 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="description">Description</label>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="description">Description courte (cartes et listes)</label>
           <textarea id="description" name="description" defaultValue={formation.description} required rows={3} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="presentation">Présentation (page de la formation)</label>
+          <textarea id="presentation" name="presentation" defaultValue={formation.presentation} rows={5} placeholder="Texte long affiché sur la page publique de la formation. Un paragraphe par ligne." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="programme">Programme</label>
-          <textarea id="programme" name="programme" defaultValue={formation.programme} required rows={3} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+          <textarea id="programme" name="programme" defaultValue={formation.programme} required rows={3} placeholder="Un point du programme par ligne." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="modalitesAcces">Modalités d&apos;accès</label>
+          <textarea id="modalitesAcces" name="modalitesAcces" defaultValue={formation.modalitesAcces} rows={3} placeholder="ex: inscription en ligne ou au salon, acompte, matériel fourni..." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="prerequis">Prérequis</label>
+          <textarea id="prerequis" name="prerequis" defaultValue={formation.prerequis} rows={2} placeholder="ex: aucun prérequis, ouvert aux débutantes" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="text-xs uppercase tracking-[0.1em]" htmlFor="duree">Duree</label>
+            <label className="text-xs uppercase tracking-[0.1em]" htmlFor="duree">Durée</label>
             <input id="duree" name="duree" defaultValue={formation.duree} required className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
           </div>
           <div>
@@ -89,7 +101,7 @@ export default async function AdminFormationEditPage({
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="publie" defaultChecked={formation.publie} />
-          Publiee (visible sur /academy)
+          Publiée (visible sur /academy)
         </label>
         <button
           type="submit"
@@ -123,13 +135,13 @@ export default async function AdminFormationEditPage({
           </li>
         ))}
         {formation.sessions.length === 0 && (
-          <p className="text-sm text-[var(--gris)]">Aucune session programmee.</p>
+          <p className="text-sm text-[var(--gris)]">Aucune session programmée.</p>
         )}
       </ul>
 
       <form action={createFormationSession.bind(null, id)} className="mt-6 flex flex-wrap items-end gap-4">
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="dateDebut">Debut</label>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="dateDebut">Début</label>
           <input id="dateDebut" name="dateDebut" type="date" required className="mt-1 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>

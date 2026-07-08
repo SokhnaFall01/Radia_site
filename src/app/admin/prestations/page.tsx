@@ -27,7 +27,7 @@ export default async function AdminPrestationsPage({
 
       {maj === "ok" && (
         <p className="mt-4 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
-          Prestation mise a jour.
+          Prestation mise à jour.
         </p>
       )}
       {erreur === "suppression" && (
@@ -37,7 +37,7 @@ export default async function AdminPrestationsPage({
       )}
       {erreur === "photo" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Photo invalide (jpg/png/webp, 5 Mo max).
+          Photo invalide (jpg/png/webp, 10 Mo max).
         </p>
       )}
 
@@ -58,7 +58,7 @@ export default async function AdminPrestationsPage({
                 <input name="nom" defaultValue={p.nom} required className="mt-1 block border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="text-xs uppercase tracking-[0.1em]">Duree (min)</label>
+                <label className="text-xs uppercase tracking-[0.1em]">Durée (min)</label>
                 <input name="dureeMinutes" type="number" min={1} defaultValue={p.dureeMinutes} required className="mt-1 block w-24 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
               </div>
               <div>
@@ -100,7 +100,7 @@ export default async function AdminPrestationsPage({
           <input id="nom" name="nom" required className="mt-1 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="dureeMinutes">Duree (min)</label>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="dureeMinutes">Durée (min)</label>
           <input id="dureeMinutes" name="dureeMinutes" type="number" min={1} required defaultValue={60} className="mt-1 w-24 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>

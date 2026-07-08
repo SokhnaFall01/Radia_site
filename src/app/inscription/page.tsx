@@ -9,7 +9,7 @@ export default function InscriptionPage() {
 
   return (
     <section className="mx-auto max-w-sm px-6 py-20">
-      <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Creer un compte</h1>
+      <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Créer un compte</h1>
       <form action={action} className="mt-8 flex flex-col gap-4">
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="nom">
@@ -40,7 +40,7 @@ export default function InscriptionPage() {
         </div>
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="telephone">
-            Telephone (optionnel)
+            Téléphone (optionnel)
           </label>
           <input
             id="telephone"
@@ -73,11 +73,11 @@ export default function InscriptionPage() {
           type="submit"
           className="mt-2 border border-[var(--noir)] bg-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.12em] text-[var(--porcelaine)] disabled:opacity-50"
         >
-          Creer mon compte
+          Créer mon compte
         </button>
       </form>
       <p className="mt-6 text-sm text-[var(--gris)]">
-        Deja un compte ?{" "}
+        Déjà un compte ?{" "}
         <Link href="/connexion" className="underline">
           Se connecter
         </Link>

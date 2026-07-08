@@ -32,12 +32,12 @@ export default async function AdminHorairesPage({
 
       {maj === "ok" && (
         <p className="mt-4 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
-          Horaires mis a jour.
+          Horaires mis à jour.
         </p>
       )}
       {erreur === "doublon" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Ce jour est deja marque comme ferme.
+          Ce jour est déjà marqué comme fermé.
         </p>
       )}
 
@@ -92,7 +92,7 @@ export default async function AdminHorairesPage({
           </li>
         ))}
         {joursFermes.length === 0 && (
-          <p className="text-sm text-[var(--gris)]">Aucun jour ferme exceptionnel.</p>
+          <p className="text-sm text-[var(--gris)]">Aucun jour fermé exceptionnel.</p>
         )}
       </ul>
 

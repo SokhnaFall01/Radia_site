@@ -8,7 +8,7 @@ export const metadata = { title: "Demandes de devis — Administration" };
 
 const TYPE_LABEL: Record<string, string> = {
   MARIAGE: "Mariage",
-  HENNE: "Henne Time",
+  HENNE: "Henné Time",
   MAQUILLAGE_SIMPLE: "Maquillage simple",
   AUTRE: "Autre",
 };
@@ -16,9 +16,9 @@ const TYPE_LABEL: Record<string, string> = {
 const STATUT_LABEL: Record<string, string> = {
   NOUVEAU: "Nouveau",
   EN_COURS: "En cours",
-  ENVOYE: "Envoye",
-  ACCEPTE: "Accepte",
-  REFUSE: "Refuse",
+  ENVOYE: "Envoyé",
+  ACCEPTE: "Accepté",
+  REFUSE: "Refusé",
 };
 
 export default async function AdminDevisPage({
@@ -42,7 +42,7 @@ export default async function AdminDevisPage({
 
       {maj === "ok" && (
         <p className="mt-4 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
-          Statut mis a jour.
+          Statut mis à jour.
         </p>
       )}
 

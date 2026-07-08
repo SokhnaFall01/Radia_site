@@ -37,7 +37,7 @@ export async function passerCommande(
   const adresse = formData.get("adresse");
 
   if (livraison !== "LIVRAISON" && livraison !== "RETRAIT_SALON") {
-    return { message: "Merci de choisir un mode de reception." };
+    return { message: "Merci de choisir un mode de réception." };
   }
   if (livraison === "LIVRAISON" && (typeof adresse !== "string" || !adresse.trim())) {
     return { message: "Merci de renseigner une adresse de livraison." };

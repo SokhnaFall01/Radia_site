@@ -127,16 +127,20 @@ model User {
 }
 
 model Formation {
-  id          String   @id @default(cuid())
-  titre       String
-  description String
-  programme   String
-  duree       String
-  tarifFcfa   Int
-  niveau      String
-  photos      String[]
-  publie      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id             String   @id @default(cuid())
+  titre          String
+  description    String
+  // Contenu long de la page publique /academy/[id]
+  presentation   String   @default("")
+  modalitesAcces String   @default("")
+  prerequis      String   @default("")
+  programme      String
+  duree          String
+  tarifFcfa      Int
+  niveau         String
+  photos         String[]
+  publie         Boolean  @default(false)
+  createdAt      DateTime @default(now())
 
   sessions Sessionformation[]
   lecons   Lecon[]

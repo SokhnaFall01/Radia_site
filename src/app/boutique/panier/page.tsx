@@ -48,7 +48,7 @@ export default async function PanierPage() {
                       type="submit"
                       className="border border-[var(--noir)] px-3 py-1 text-xs uppercase tracking-[0.1em]"
                     >
-                      Mettre a jour
+                      Mettre à jour
                     </button>
                   </form>
                   <form action={retirerDuPanier.bind(null, produit.id)}>

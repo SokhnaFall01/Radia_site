@@ -32,7 +32,7 @@ export default async function AdminClientProfilePage({
   return (
     <section className="mx-auto max-w-3xl px-6 py-20">
       <p className="text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
-        <Link href="/admin/clients">&larr; Clients &amp; eleves</Link>
+        <Link href="/admin/clients">&larr; Clients &amp; élèves</Link>
       </p>
       <h1 className="font-display mt-3 text-2xl uppercase tracking-[0.12em]">{user.nom}</h1>
       <p className="mt-2 text-sm text-[var(--gris)]">
@@ -43,7 +43,7 @@ export default async function AdminClientProfilePage({
 
       {maj === "ok" && (
         <p className="mt-4 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
-          Role mis a jour.
+          Rôle mis à jour.
         </p>
       )}
 
@@ -86,7 +86,7 @@ export default async function AdminClientProfilePage({
               </li>
             ))}
             {user.rendezVousStaff.length === 0 && (
-              <p className="text-sm text-[var(--gris)]">Aucun rendez-vous assigne.</p>
+              <p className="text-sm text-[var(--gris)]">Aucun rendez-vous assigné.</p>
             )}
           </ul>
         </>

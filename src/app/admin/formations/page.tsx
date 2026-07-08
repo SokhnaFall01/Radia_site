@@ -30,12 +30,12 @@ export default async function AdminFormationsPage({
 
       {erreur === "suppression" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Impossible de supprimer cette formation : des sessions ou inscriptions y sont liees.
+          Impossible de supprimer cette formation : des sessions ou inscriptions y sont liées.
         </p>
       )}
       {erreur === "photo" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Photo invalide (jpg/png/webp, 5 Mo max).
+          Photo invalide (jpg/png/webp, 10 Mo max).
         </p>
       )}
 
@@ -58,7 +58,7 @@ export default async function AdminFormationsPage({
               </p>
             </div>
             <span className="text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
-              {f.publie ? "Publiee" : "Brouillon"}
+              {f.publie ? "Publiée" : "Brouillon"}
             </span>
           </li>
         ))}
@@ -78,21 +78,33 @@ export default async function AdminFormationsPage({
           <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="description">Description</label>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="description">Description courte (cartes et listes)</label>
           <textarea id="description" name="description" required rows={3} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="presentation">Présentation (page de la formation)</label>
+          <textarea id="presentation" name="presentation" rows={5} placeholder="Texte long affiché sur la page publique de la formation. Un paragraphe par ligne." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="programme">Programme</label>
-          <textarea id="programme" name="programme" required rows={3} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+          <textarea id="programme" name="programme" required rows={3} placeholder="Un point du programme par ligne." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="modalitesAcces">Modalités d&apos;accès</label>
+          <textarea id="modalitesAcces" name="modalitesAcces" rows={3} placeholder="ex: inscription en ligne ou au salon, acompte, matériel fourni..." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="prerequis">Prérequis</label>
+          <textarea id="prerequis" name="prerequis" rows={2} placeholder="ex: aucun prérequis, ouvert aux débutantes" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="text-xs uppercase tracking-[0.1em]" htmlFor="duree">Duree</label>
+            <label className="text-xs uppercase tracking-[0.1em]" htmlFor="duree">Durée</label>
             <input id="duree" name="duree" required placeholder="ex: 2 jours" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
           </div>
           <div>
             <label className="text-xs uppercase tracking-[0.1em]" htmlFor="niveau">Niveau</label>
-            <input id="niveau" name="niveau" required placeholder="ex: Debutant" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            <input id="niveau" name="niveau" required placeholder="ex: Débutant" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
           </div>
           <div>
             <label className="text-xs uppercase tracking-[0.1em]" htmlFor="tarifFcfa">Tarif (FCFA)</label>
@@ -101,13 +113,13 @@ export default async function AdminFormationsPage({
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="publie" />
-          Publier immediatement (visible sur /academy)
+          Publier immédiatement (visible sur /academy)
         </label>
         <button
           type="submit"
           className="mt-2 self-start border border-[var(--noir)] bg-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.12em] text-[var(--porcelaine)]"
         >
-          Creer la formation
+          Créer la formation
         </button>
       </form>
     </section>

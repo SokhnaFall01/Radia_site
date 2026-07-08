@@ -31,12 +31,12 @@ export default async function AdminContenuPage({
 
       {maj === "ok" && (
         <p className="mt-4 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
-          Contenu mis a jour.
+          Contenu mis à jour.
         </p>
       )}
       {erreur === "photo" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Photo invalide (jpg/png/webp, 5 Mo max).
+          Photo invalide (jpg/png/webp, 10 Mo max).
         </p>
       )}
 
@@ -74,7 +74,7 @@ export default async function AdminContenuPage({
         </div>
 
         <div>
-          <h2 className="font-display text-sm uppercase tracking-[0.12em]">A propos — La fondatrice</h2>
+          <h2 className="font-display text-sm uppercase tracking-[0.12em]">À propos — La fondatrice</h2>
           <div className="mt-4 flex flex-col gap-4">
             <div>
               <label className="text-xs uppercase tracking-[0.1em]" htmlFor="aproposPhoto">Portrait</label>
@@ -93,7 +93,7 @@ export default async function AdminContenuPage({
               <input id="aproposTitre" name="aproposTitre" defaultValue={t.aproposTitre} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
             </div>
             <div>
-              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="aproposRole">Role</label>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="aproposRole">Rôle</label>
               <input id="aproposRole" name="aproposRole" defaultValue={t.aproposRole} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
             </div>
             <div>
@@ -115,6 +115,80 @@ export default async function AdminContenuPage({
             <div>
               <label className="text-xs uppercase tracking-[0.1em]" htmlFor="aproposSignature">Signature</label>
               <input id="aproposSignature" name="aproposSignature" defaultValue={t.aproposSignature} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="font-display text-sm uppercase tracking-[0.12em]">Page Academy</h2>
+          <div className="mt-4 flex flex-col gap-4">
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="academyTitre">Titre</label>
+              <input id="academyTitre" name="academyTitre" defaultValue={t.academyTitre} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="academyIntro">Texte d&apos;introduction</label>
+              <textarea id="academyIntro" name="academyIntro" rows={2} defaultValue={t.academyIntro} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="font-display text-sm uppercase tracking-[0.12em]">Page Boutique</h2>
+          <div className="mt-4 flex flex-col gap-4">
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="boutiqueTitre">Titre</label>
+              <input id="boutiqueTitre" name="boutiqueTitre" defaultValue={t.boutiqueTitre} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="boutiqueIntro">Texte d&apos;introduction</label>
+              <textarea id="boutiqueIntro" name="boutiqueIntro" rows={2} defaultValue={t.boutiqueIntro} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="font-display text-sm uppercase tracking-[0.12em]">Page Réservation</h2>
+          <div className="mt-4 flex flex-col gap-4">
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="reservationTitre">Titre</label>
+              <input id="reservationTitre" name="reservationTitre" defaultValue={t.reservationTitre} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="reservationIntro">Texte d&apos;introduction</label>
+              <textarea id="reservationIntro" name="reservationIntro" rows={2} defaultValue={t.reservationIntro} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="font-display text-sm uppercase tracking-[0.12em]">Page Galerie</h2>
+          <div className="mt-4 flex flex-col gap-4">
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="galerieTitre">Titre</label>
+              <input id="galerieTitre" name="galerieTitre" defaultValue={t.galerieTitre} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="galerieIntro">Texte d&apos;introduction</label>
+              <textarea id="galerieIntro" name="galerieIntro" rows={2} defaultValue={t.galerieIntro} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="font-display text-sm uppercase tracking-[0.12em]">Page Devis</h2>
+          <div className="mt-4 flex flex-col gap-4">
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="devisTitre">Titre</label>
+              <input id="devisTitre" name="devisTitre" defaultValue={t.devisTitre} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="devisIntro">Texte d&apos;introduction</label>
+              <textarea id="devisIntro" name="devisIntro" rows={3} defaultValue={t.devisIntro} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-xs uppercase tracking-[0.1em]" htmlFor="devisDeplacement">Encadré tarifs de déplacement</label>
+              <textarea id="devisDeplacement" name="devisDeplacement" rows={2} defaultValue={t.devisDeplacement} className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
             </div>
           </div>
         </div>
@@ -154,14 +228,14 @@ export default async function AdminContenuPage({
           <input id="photo" name="photo" type="file" required accept="image/jpeg,image/png,image/webp" className="mt-1 block text-sm" />
         </div>
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="legende">Legende (optionnel)</label>
-          <input id="legende" name="legende" placeholder="ex: Mariee" className="mt-1 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="legende">Légende (optionnel)</label>
+          <input id="legende" name="legende" placeholder="ex: Mariée" className="mt-1 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <button
           type="submit"
           className="border border-[var(--noir)] px-5 py-2.5 text-xs uppercase tracking-[0.1em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
         >
-          Ajouter a la galerie
+          Ajouter à la galerie
         </button>
       </form>
     </section>

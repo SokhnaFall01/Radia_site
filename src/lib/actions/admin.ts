@@ -46,6 +46,9 @@ export async function createFormation(formData: FormData) {
     data: {
       titre: str(formData, "titre"),
       description: str(formData, "description"),
+      presentation: str(formData, "presentation"),
+      modalitesAcces: str(formData, "modalitesAcces"),
+      prerequis: str(formData, "prerequis"),
       programme: str(formData, "programme"),
       duree: str(formData, "duree"),
       tarifFcfa: num(formData, "tarifFcfa"),
@@ -77,6 +80,9 @@ export async function updateFormation(id: string, formData: FormData) {
     data: {
       titre: str(formData, "titre"),
       description: str(formData, "description"),
+      presentation: str(formData, "presentation"),
+      modalitesAcces: str(formData, "modalitesAcces"),
+      prerequis: str(formData, "prerequis"),
       programme: str(formData, "programme"),
       duree: str(formData, "duree"),
       tarifFcfa: num(formData, "tarifFcfa"),

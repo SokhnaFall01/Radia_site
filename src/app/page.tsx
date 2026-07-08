@@ -4,9 +4,9 @@ import { ajouterAuPanier } from "@/lib/actions/cart";
 import { getSiteTextes } from "@/lib/contenuTextes";
 
 const TEMOIGNAGES = [
-  { texte: "Une equipe passionnee, un resultat au-dela de mes attentes le jour de mon mariage.", qui: "Fatou S." },
-  { texte: "La formation intensive a change ma carriere. Aujourd'hui je vis de mon art.", qui: "Aissatou K., diplomee 2026" },
-  { texte: "Un salon elegant, une ecoute rare. Je ne vais plus nulle part ailleurs.", qui: "Bineta D." },
+  { texte: "Une équipe passionnée, un résultat au-delà de mes attentes le jour de mon mariage.", qui: "Fatou S." },
+  { texte: "La formation intensive a changé ma carrière. Aujourd'hui je vis de mon art.", qui: "Aissatou K., diplômée 2026" },
+  { texte: "Un salon élégant, une écoute rare. Je ne vais plus nulle part ailleurs.", qui: "Bineta D." },
 ];
 
 export default async function Home() {
@@ -46,13 +46,13 @@ export default async function Home() {
               href="/reservation"
               className="border border-[var(--noir)] bg-[var(--noir)] px-8 py-4 text-xs uppercase tracking-[0.18em] text-[var(--porcelaine)]"
             >
-              Reserver une prestation
+              Réserver une prestation
             </Link>
             <Link
               href="/academy"
               className="border border-[var(--noir)] bg-[var(--porcelaine)] px-8 py-4 text-xs uppercase tracking-[0.18em]"
             >
-              S&apos;inscrire a une formation
+              S&apos;inscrire à une formation
             </Link>
             <Link
               href="/boutique"
@@ -72,13 +72,13 @@ export default async function Home() {
               Nos prestations
             </div>
             <p className="font-italic-serif mt-4 text-lg text-[var(--brass)]">
-              Le salon, une experience sur mesure
+              Le salon, une expérience sur mesure
             </p>
           </div>
 
           {prestations.length === 0 ? (
             <p className="mt-12 text-center text-sm text-[var(--gris)]">
-              Les prestations seront bientot disponibles.
+              Les prestations seront bientôt disponibles.
             </p>
           ) : (
             <div className="mt-14 grid gap-8 sm:grid-cols-3">
@@ -89,19 +89,19 @@ export default async function Home() {
                     <img src={p.photo} alt={p.nom} className="h-52 w-full object-cover" />
                   ) : (
                     <div className="flex h-52 items-center justify-center bg-gradient-to-br from-[var(--blush)] to-[#c9a98f] text-sm italic text-[var(--noir)]/50">
-                      Photo a venir
+                      Photo à venir
                     </div>
                   )}
                   <div className="p-6">
                     <h3 className="text-sm uppercase tracking-[0.14em]">{p.nom}</h3>
                     <p className="font-italic-serif mt-4 text-lg text-[var(--brass)]">
-                      A partir de {p.prixFcfa.toLocaleString("fr-FR")} FCFA
+                      À partir de {p.prixFcfa.toLocaleString("fr-FR")} FCFA
                     </p>
                     <Link
                       href="/reservation"
                       className="mt-4 inline-block border-b border-[var(--brass)] text-xs uppercase tracking-[0.14em]"
                     >
-                      Reserver
+                      Réserver
                     </Link>
                   </div>
                 </div>
@@ -111,7 +111,7 @@ export default async function Home() {
 
           <div className="mt-14 border border-dashed border-[var(--brass)] bg-[var(--blush)] p-8 text-center">
             <p className="text-sm text-[var(--gris)]">
-              Mariage, Henne Time, evenement particulier ? Decrivez votre projet et recevez une
+              Mariage, Henné Time, événement particulier ? Décrivez votre projet et recevez une
               proposition sur mesure.
             </p>
             <Link
@@ -136,7 +136,7 @@ export default async function Home() {
 
           {formations.length === 0 ? (
             <p className="text-center text-sm text-[var(--gris)]">
-              Le catalogue de formations sera bientot disponible.
+              Le catalogue de formations sera bientôt disponible.
             </p>
           ) : (
             <div className="flex gap-6 overflow-x-auto pb-4">
@@ -147,7 +147,7 @@ export default async function Home() {
                     <img src={f.photos[0]} alt={f.titre} className="h-72 w-full object-cover" />
                   ) : (
                     <div className="flex h-72 items-center justify-center bg-gradient-to-br from-[#d9c4b2] to-[#8f6f55] text-sm italic text-white/70">
-                      Photo a venir
+                      Photo à venir
                     </div>
                   )}
                   <div className="mt-3 flex items-center justify-center gap-3 bg-[var(--blush)] py-3 text-xs uppercase tracking-[0.06em]">
@@ -161,7 +161,7 @@ export default async function Home() {
                     href="/academy"
                     className="mt-4 inline-block bg-[var(--blush)] px-6 py-3 text-xs uppercase tracking-[0.14em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
                   >
-                    Decouvrir
+                    Découvrir
                   </Link>
                 </div>
               ))}
@@ -170,12 +170,12 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Temoignages */}
+      {/* Témoignages */}
       <section className="border-t border-[var(--ligne)] bg-white py-24">
         <div className="mx-auto max-w-5xl px-6">
           <div className="mb-14 text-center">
             <div className="font-display inline-block border border-[var(--noir)] px-8 py-3 text-lg uppercase tracking-[0.2em]">
-              Temoignages
+              Témoignages
             </div>
             <p className="font-italic-serif mt-4 text-lg text-[var(--brass)]">
               Elles nous font confiance
@@ -202,12 +202,12 @@ export default async function Home() {
               Galerie
             </div>
             <p className="font-italic-serif mt-4 text-lg text-[var(--brass)]">
-              Realisations du salon &amp; travaux des eleves
+              Réalisations du salon &amp; travaux des élèves
             </p>
           </div>
           {galerie.length === 0 ? (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {["Avant / Apres", "Mariee", "Eleves en formation", "Shooting editorial"].map((label) => (
+              {["Avant / Après", "Mariée", "Élèves en formation", "Shooting éditorial"].map((label) => (
                 <div
                   key={label}
                   className="flex h-56 items-center justify-center bg-gradient-to-br from-[var(--blush)] to-[#b08f71] text-center text-sm italic text-[var(--noir)]/60"
@@ -276,13 +276,13 @@ export default async function Home() {
               Boutique Radia Glam
             </div>
             <p className="font-italic-serif mt-4 text-lg text-[var(--brass)]">
-              Nos essentiels, selectionnes avec exigence
+              Nos essentiels, sélectionnés avec exigence
             </p>
           </div>
 
           {produits.length === 0 ? (
             <p className="text-center text-sm text-[var(--gris)]">
-              La boutique sera bientot disponible.
+              La boutique sera bientôt disponible.
             </p>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -341,11 +341,11 @@ export default async function Home() {
       {/* Reservation banner */}
       <section id="resa" className="bg-[var(--blush)] py-24 text-center">
         <h2 className="font-display text-2xl uppercase tracking-[0.16em] sm:text-4xl">
-          Reservez votre moment
+          Réservez votre moment
         </h2>
         <p className="mx-auto mt-5 max-w-lg text-[var(--gris)]">
-          Choisissez votre prestation, votre artiste et votre creneau. Confirmation immediate,
-          acompte securise en ligne.
+          Choisissez votre prestation, votre artiste et votre créneau. Confirmation immédiate,
+          acompte sécurisé en ligne.
         </p>
         <Link
           href="/reservation"

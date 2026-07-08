@@ -31,7 +31,7 @@ export default async function EspacePage({
 
       {reservation === "confirmee" && (
         <p className="mt-4 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
-          Votre demande de rendez-vous a bien ete enregistree.
+          Votre demande de rendez-vous a bien été enregistrée.
         </p>
       )}
 

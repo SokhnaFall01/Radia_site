@@ -22,7 +22,7 @@ export async function signup(_state: AuthFormState, formData: FormData): Promise
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    return { message: "Un compte existe deja avec cet email." };
+    return { message: "Un compte existe déjà avec cet email." };
   }
 
   const passwordHash = await bcrypt.hash(password, 12);

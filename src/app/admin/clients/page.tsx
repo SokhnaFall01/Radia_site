@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { verifySession } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 
-export const metadata = { title: "Clients & eleves — Administration" };
+export const metadata = { title: "Clients & élèves — Administration" };
 
 export default async function AdminClientsPage() {
   const session = await verifySession();
@@ -31,7 +31,7 @@ export default async function AdminClientsPage() {
       <p className="text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
         <Link href="/admin">&larr; Tableau de bord</Link>
       </p>
-      <h1 className="font-display mt-3 text-2xl uppercase tracking-[0.12em]">Clients &amp; eleves</h1>
+      <h1 className="font-display mt-3 text-2xl uppercase tracking-[0.12em]">Clients &amp; élèves</h1>
       <p className="mt-4 text-sm text-[var(--gris)]">
         {users.length} compte{users.length > 1 ? "s" : ""}. Cliquez sur une fiche pour voir le
         detail (rendez-vous, commandes, formations) ou attribuer le role staff.

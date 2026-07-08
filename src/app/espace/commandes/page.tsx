@@ -6,10 +6,10 @@ export const metadata = { title: "Mes commandes — Radia Glam" };
 
 const STATUT_LABEL: Record<string, string> = {
   EN_ATTENTE: "En attente",
-  PAYEE: "Payee",
-  PREPAREE: "Preparee",
-  LIVREE: "Livree",
-  ANNULEE: "Annulee",
+  PAYEE: "Payée",
+  PREPAREE: "Préparée",
+  LIVREE: "Livrée",
+  ANNULEE: "Annulée",
 };
 
 export default async function CommandesPage({

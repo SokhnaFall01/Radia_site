@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const SignupFormSchema = z.object({
-  nom: z.string().min(2, { error: "Le nom doit contenir au moins 2 caracteres." }).trim(),
+  nom: z.string().min(2, { error: "Le nom doit contenir au moins 2 caractères." }).trim(),
   email: z.email({ error: "Merci d'entrer un email valide." }).trim(),
   telephone: z.string().trim().optional(),
   password: z

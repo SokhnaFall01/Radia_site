@@ -22,10 +22,10 @@ export async function submitDevis(
   const message = String(formData.get("message") ?? "").trim();
 
   if (!nom || !telephone || !ville) {
-    return { message: "Merci de renseigner au minimum votre nom, telephone et la ville." };
+    return { message: "Merci de renseigner au minimum votre nom, téléphone et la ville." };
   }
   if (!TYPES_VALIDES.includes(typeEvenement)) {
-    return { message: "Merci de choisir un type d'evenement." };
+    return { message: "Merci de choisir un type d'événement." };
   }
   const date = new Date(dateStr);
   if (!dateStr || Number.isNaN(date.getTime())) {

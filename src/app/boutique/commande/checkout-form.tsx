@@ -28,7 +28,7 @@ export default function CheckoutForm({ fraisLivraison }: { fraisLivraison: numbe
             checked={livraison === "LIVRAISON"}
             onChange={() => setLivraison("LIVRAISON")}
           />
-          Livraison a Dakar (+{fraisLivraison.toLocaleString("fr-FR")} FCFA)
+          Livraison à Dakar (+{fraisLivraison.toLocaleString("fr-FR")} FCFA)
         </label>
       </div>
 
@@ -56,8 +56,8 @@ export default function CheckoutForm({ fraisLivraison }: { fraisLivraison: numbe
         Confirmer la commande
       </button>
       <p className="text-xs text-[var(--gris)]">
-        Paiement en ligne a venir (Wave / Orange Money). Pour l&apos;instant, le reglement se fait
-        en especes au retrait ou a la livraison.
+        Paiement en ligne à venir (Wave / Orange Money). Pour l&apos;instant, le règlement se fait
+        en espèces au retrait ou à la livraison.
       </p>
     </form>
   );

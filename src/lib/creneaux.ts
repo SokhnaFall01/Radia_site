@@ -30,12 +30,12 @@ export async function getCreneauxDisponibles(
 
   const horaire = await prisma.horaireOuverture.findUnique({ where: { jour: date.getUTCDay() } });
   if (!horaire || !horaire.ouvert) {
-    return { ouvert: false, motif: "Le salon est ferme ce jour-la.", creneaux: [] };
+    return { ouvert: false, motif: "Le salon est fermé ce jour-là.", creneaux: [] };
   }
 
   const ferme = await prisma.jourFerme.findUnique({ where: { date } });
   if (ferme) {
-    return { ouvert: false, motif: ferme.motif || "Jour ferme exceptionnellement.", creneaux: [] };
+    return { ouvert: false, motif: ferme.motif || "Jour fermé exceptionnellement.", creneaux: [] };
   }
 
   const staffCount = maquilleuseId

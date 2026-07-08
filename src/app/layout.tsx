@@ -25,7 +25,7 @@ const jost = Jost({
 
 export const metadata: Metadata = {
   title: "Radia Glam Beauty & Co.",
-  description: "Salon, academy et boutique de maquillage a Dakar, Senegal.",
+  description: "Salon, academy et boutique de maquillage à Dakar, Sénégal.",
 };
 
 export default function RootLayout({

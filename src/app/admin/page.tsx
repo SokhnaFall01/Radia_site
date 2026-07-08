@@ -74,13 +74,13 @@ export default async function AdminPage() {
             href="/admin/horaires"
             className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
           >
-            Horaires &amp; jours feries
+            Horaires &amp; jours fériés
           </Link>
           <Link
             href="/admin/coordonnees"
             className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
           >
-            Coordonnees &amp; reseaux
+            Coordonnées &amp; réseaux
           </Link>
           <Link
             href="/admin/contenu"
@@ -92,7 +92,7 @@ export default async function AdminPage() {
             href="/admin/clients"
             className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
           >
-            Clients &amp; eleves
+            Clients &amp; élèves
           </Link>
           <Link
             href="/admin/statistiques"

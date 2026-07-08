@@ -36,7 +36,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     font,
     color: noir,
   });
-  page.drawText("Certificat de reussite", {
+  page.drawText("Certificat de réussite", {
     x: 320,
     y: 440,
     size: 16,
@@ -71,7 +71,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     font: fontRegular,
     color: noir,
   });
-  page.drawText(`Delivre le ${certificat.delivreLe.toLocaleDateString("fr-FR")}`, {
+  page.drawText(`Délivré le ${certificat.delivreLe.toLocaleDateString("fr-FR")}`, {
     x: 620,
     y: 60,
     size: 10,

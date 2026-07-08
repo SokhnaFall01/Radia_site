@@ -4,7 +4,7 @@ import { verifySession } from "@/lib/dal";
 import { getCoordonnees } from "@/lib/contenu";
 import { updateCoordonnees } from "@/lib/actions/admin";
 
-export const metadata = { title: "Coordonnees — Administration" };
+export const metadata = { title: "Coordonnées — Administration" };
 
 export default async function AdminCoordonneesPage({
   searchParams,
@@ -29,17 +29,17 @@ export default async function AdminCoordonneesPage({
 
       {maj === "ok" && (
         <p className="mt-4 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
-          Coordonnees mises a jour.
+          Coordonnées mises à jour.
         </p>
       )}
 
       <form action={updateCoordonnees} className="mt-8 flex flex-col gap-4">
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="telephone">Telephone</label>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="telephone">Téléphone</label>
           <input id="telephone" name="telephone" defaultValue={c.telephone} placeholder="+221 77 000 00 00" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="whatsapp">WhatsApp (numero international sans +)</label>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="whatsapp">WhatsApp (numéro international sans +)</label>
           <input id="whatsapp" name="whatsapp" defaultValue={c.whatsapp} placeholder="221770000000" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
