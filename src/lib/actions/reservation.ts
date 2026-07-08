@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { verifySession } from "@/lib/dal";
 import { getCreneauxDisponibles } from "@/lib/creneaux";
@@ -35,4 +36,25 @@ export async function reserver(
   });
 
   redirect("/espace?reservation=confirmee");
+}
+
+export async function annulerRendezVous(id: string) {
+  const session = await verifySession();
+  if (!session) redirect("/connexion");
+
+  const rdv = await prisma.rendezVous.findUnique({ where: { id } });
+  if (
+    !rdv ||
+    rdv.clienteId !== session.userId ||
+    (rdv.statut !== "EN_ATTENTE" && rdv.statut !== "CONFIRME") ||
+    rdv.date <= new Date()
+  ) {
+    redirect("/espace?reservation=erreur-annulation");
+  }
+
+  await prisma.rendezVous.update({ where: { id }, data: { statut: "ANNULE" } });
+
+  revalidatePath("/espace");
+  revalidatePath("/admin");
+  redirect("/espace?reservation=annulee");
 }

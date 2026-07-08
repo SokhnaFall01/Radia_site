@@ -5,18 +5,48 @@ import { prisma } from "@/lib/db";
 
 export const metadata = { title: "Administration — Radia Glam" };
 
-export default async function AdminPage() {
+const STATUT_LABELS: Record<string, string> = {
+  EN_ATTENTE: "En attente",
+  CONFIRME: "Confirmé",
+  HONORE: "Honoré",
+  ABSENT: "Absent",
+  ANNULE: "Annulé",
+};
+
+function parseDateParam(value: string | undefined) {
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const d = new Date(`${value}T00:00:00.000Z`);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ du?: string; au?: string }>;
+}) {
   const session = await verifySession();
   if (!session) redirect("/connexion");
   if (session.role !== "ADMIN" && session.role !== "STAFF") redirect("/");
 
   const isStaffOnly = session.role === "STAFF";
+  const { du, au } = await searchParams;
+
+  const dateDu = parseDateParam(du);
+  const dateAu = parseDateParam(au);
+  const finAu = dateAu ? new Date(dateAu.getTime() + 24 * 60 * 60 * 1000 - 1) : null;
+  const filtreActif = Boolean(dateDu || finAu);
 
   const rendezVous = await prisma.rendezVous.findMany({
-    where: isStaffOnly ? { maquilleuseId: session.userId } : {},
+    where: {
+      ...(isStaffOnly ? { maquilleuseId: session.userId } : {}),
+      ...(filtreActif
+        ? { date: { ...(dateDu ? { gte: dateDu } : {}), ...(finAu ? { lte: finAu } : {}) } }
+        : {}),
+    },
     include: { prestation: true, cliente: true },
     orderBy: { date: "asc" },
-    take: 20,
+    // Sans filtre on limite la liste ; une période choisie s'affiche en entier.
+    ...(filtreActif ? {} : { take: 20 }),
   });
 
   const devisNouveaux = isStaffOnly
@@ -32,8 +62,44 @@ export default async function AdminPage() {
       <h2 className="mt-10 font-display text-sm uppercase tracking-[0.12em]">
         Rendez-vous {isStaffOnly ? "" : "(tous)"}
       </h2>
+
+      <form method="GET" className="mt-4 flex flex-wrap items-end gap-3">
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="du">Du</label>
+          <input id="du" name="du" type="date" defaultValue={dateDu ? du : ""} className="mt-1 block border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="au">Au</label>
+          <input id="au" name="au" type="date" defaultValue={dateAu ? au : ""} className="mt-1 block border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <button
+          type="submit"
+          className="border border-[var(--noir)] px-4 py-2.5 text-xs uppercase tracking-[0.1em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
+        >
+          Filtrer
+        </button>
+        {filtreActif && (
+          <Link href="/admin" className="px-2 py-2.5 text-xs uppercase tracking-[0.1em] text-[var(--gris)] underline">
+            Réinitialiser
+          </Link>
+        )}
+      </form>
+      {filtreActif && (
+        <p className="mt-3 text-xs text-[var(--gris)]">
+          {rendezVous.length} rendez-vous sur la période.
+        </p>
+      )}
+      {!filtreActif && rendezVous.length === 20 && (
+        <p className="mt-3 text-xs text-[var(--gris)]">
+          20 premiers rendez-vous affichés — utilisez le filtre par dates pour voir une période
+          précise.
+        </p>
+      )}
+
       {rendezVous.length === 0 ? (
-        <p className="mt-3 text-sm text-[var(--gris)]">Aucun rendez-vous.</p>
+        <p className="mt-3 text-sm text-[var(--gris)]">
+          {filtreActif ? "Aucun rendez-vous sur cette période." : "Aucun rendez-vous."}
+        </p>
       ) : (
         <ul className="mt-4 flex flex-col gap-3">
           {rendezVous.map((rdv) => (
@@ -43,7 +109,7 @@ export default async function AdminPage() {
               </p>
               <p className="text-[var(--gris)]">{rdv.date.toLocaleString("fr-FR", { timeZone: "UTC" })}</p>
               <p className="mt-1 text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
-                {rdv.statut} · {rdv.origine}
+                {STATUT_LABELS[rdv.statut] ?? rdv.statut} · {rdv.origine === "EN_LIGNE" ? "En ligne" : "Manuel"}
               </p>
             </li>
           ))}

@@ -164,6 +164,13 @@ export default async function ReservationPage({
                 </div>
               )}
 
+              {selectedPrestation.acompteRequis && (
+                <p className="mt-6 text-xs text-[var(--gris)]">
+                  Cette prestation demande un acompte de{" "}
+                  {selectedPrestation.acompteRequis.toLocaleString("fr-FR")} FCFA, non remboursable
+                  en cas d&apos;annulation.
+                </p>
+              )}
               <p className="mt-6 text-xs text-[var(--gris)]">
                 Le paiement en ligne (Wave / Orange Money) sera activé dès la connexion du compte
                 marchand PayDunya/PayTech. Pour l&apos;instant, votre demande est enregistrée et
