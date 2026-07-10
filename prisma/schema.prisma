@@ -183,7 +183,11 @@ model Lecon {
   ordre       Int
   // Texte du cours affiché sur la page de la leçon
   contenu     String   @default("")
+  // Lien externe (YouTube non répertorié, Vimeo, mp4 distant)
   videoUrl    String?
+  // Vidéo hébergée sur le serveur : nom de fichier dans data/cours,
+  // servie en streaming par une route authentifiée. Prioritaire sur videoUrl.
+  videoFichier String?
   // Nom de fichier dans data/cours (servi par une route authentifiée)
   pdfUrl      String?
 

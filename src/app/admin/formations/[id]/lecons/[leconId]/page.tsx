@@ -4,6 +4,7 @@ import { verifySession } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import { parseQuizQuestions } from "@/lib/quiz";
 import { updateLecon, addQuizQuestion, deleteQuizQuestion } from "@/lib/actions/admin";
+import UploadVideo from "./upload-video";
 
 export default async function AdminLeconPage({
   params,
@@ -65,8 +66,11 @@ export default async function AdminLeconPage({
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="contenu">Texte du cours</label>
           <textarea id="contenu" name="contenu" rows={6} defaultValue={lecon.contenu} placeholder="Un paragraphe par ligne." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
+        <UploadVideo leconId={leconId} videoPresente={Boolean(lecon.videoFichier)} />
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="videoUrl">Lien vidéo</label>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="videoUrl">
+            Lien vidéo externe (ignoré si une vidéo est hébergée ci-dessus)
+          </label>
           <input id="videoUrl" name="videoUrl" type="url" defaultValue={lecon.videoUrl ?? ""} placeholder="ex: lien YouTube non répertorié, Vimeo, ou fichier .mp4" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>

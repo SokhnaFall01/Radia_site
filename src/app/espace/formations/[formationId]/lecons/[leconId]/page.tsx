@@ -49,9 +49,9 @@ export default async function LeconPage({
       </p>
       <h1 className="font-display mt-3 text-2xl uppercase tracking-[0.12em]">{lecon.titre}</h1>
 
-      {lecon.videoUrl && (
+      {(lecon.videoFichier || lecon.videoUrl) && (
         <LecteurVideo
-          videoUrl={lecon.videoUrl}
+          videoUrl={lecon.videoFichier ? `/api/cours/${lecon.id}/video` : lecon.videoUrl!}
           filigrane={`${eleve?.nom ?? ""} — ${eleve?.email ?? ""}`}
         />
       )}
