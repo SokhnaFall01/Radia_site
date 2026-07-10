@@ -4,9 +4,10 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { verifySession } from "@/lib/dal";
-import { saveUploadedPhoto } from "@/lib/uploads";
+import { saveUploadedPhoto, saveFichierCours } from "@/lib/uploads";
 import { CONTACT_KEYS } from "@/lib/contenu";
 import { SITE_TEXT_KEYS } from "@/lib/contenuTextes";
+import { parseQuizQuestions } from "@/lib/quiz";
 
 async function requireAdmin() {
   const session = await verifySession();
@@ -141,6 +142,180 @@ export async function deleteFormationSession(formationId: string, id: string) {
 
   revalidatePath(`/admin/formations/${formationId}`);
   redirect(`/admin/formations/${formationId}`);
+}
+
+// ---- Leçons ----
+
+function pdfFile(formData: FormData) {
+  const v = formData.get("pdf");
+  return v instanceof File ? v : null;
+}
+
+export async function createLecon(formationId: string, formData: FormData) {
+  await requireAdmin();
+
+  let pdfName: string | null = null;
+  try {
+    pdfName = await saveFichierCours(pdfFile(formData));
+  } catch {
+    redirect(`/admin/formations/${formationId}?erreur=pdf`);
+  }
+
+  const count = await prisma.lecon.count({ where: { formationId } });
+
+  await prisma.lecon.create({
+    data: {
+      formationId,
+      titre: str(formData, "titre"),
+      ordre: count + 1,
+      contenu: str(formData, "contenu"),
+      videoUrl: str(formData, "videoUrl") || null,
+      pdfUrl: pdfName,
+    },
+  });
+
+  revalidatePath(`/admin/formations/${formationId}`);
+  redirect(`/admin/formations/${formationId}`);
+}
+
+export async function updateLecon(formationId: string, leconId: string, formData: FormData) {
+  await requireAdmin();
+
+  let pdfName: string | null = null;
+  try {
+    pdfName = await saveFichierCours(pdfFile(formData));
+  } catch {
+    redirect(`/admin/formations/${formationId}/lecons/${leconId}?erreur=pdf`);
+  }
+
+  const existing = await prisma.lecon.findUnique({ where: { id: leconId }, select: { pdfUrl: true } });
+
+  await prisma.lecon.update({
+    where: { id: leconId },
+    data: {
+      titre: str(formData, "titre"),
+      ordre: num(formData, "ordre") || 1,
+      contenu: str(formData, "contenu"),
+      videoUrl: str(formData, "videoUrl") || null,
+      pdfUrl: pdfName ?? existing?.pdfUrl ?? null,
+    },
+  });
+
+  revalidatePath(`/admin/formations/${formationId}`);
+  revalidatePath(`/admin/formations/${formationId}/lecons/${leconId}`);
+  redirect(`/admin/formations/${formationId}/lecons/${leconId}?maj=ok`);
+}
+
+export async function deleteLecon(formationId: string, leconId: string) {
+  await requireAdmin();
+
+  try {
+    await prisma.lecon.delete({ where: { id: leconId } });
+  } catch {
+    redirect(`/admin/formations/${formationId}?erreur=suppression-lecon`);
+  }
+
+  revalidatePath(`/admin/formations/${formationId}`);
+  redirect(`/admin/formations/${formationId}`);
+}
+
+// ---- Quiz ----
+
+export async function addQuizQuestion(formationId: string, leconId: string, formData: FormData) {
+  await requireAdmin();
+
+  const question = str(formData, "question");
+  const options = [0, 1, 2, 3]
+    .map((i) => str(formData, `option-${i}`))
+    .filter(Boolean);
+  const correctIndex = num(formData, "correctIndex");
+
+  if (!question || options.length < 2 || correctIndex >= options.length) {
+    redirect(`/admin/formations/${formationId}/lecons/${leconId}?erreur=question`);
+  }
+
+  const quiz = await prisma.quiz.findUnique({ where: { leconId } });
+  const questions = quiz ? parseQuizQuestions(quiz.questions) : [];
+  questions.push({ question, options, correctIndex });
+
+  await prisma.quiz.upsert({
+    where: { leconId },
+    update: { questions },
+    create: { leconId, questions },
+  });
+
+  revalidatePath(`/admin/formations/${formationId}/lecons/${leconId}`);
+  redirect(`/admin/formations/${formationId}/lecons/${leconId}`);
+}
+
+export async function deleteQuizQuestion(formationId: string, leconId: string, index: number) {
+  await requireAdmin();
+
+  const quiz = await prisma.quiz.findUnique({ where: { leconId } });
+  if (!quiz) redirect(`/admin/formations/${formationId}/lecons/${leconId}`);
+
+  const questions = parseQuizQuestions(quiz.questions);
+  questions.splice(index, 1);
+
+  await prisma.quiz.update({ where: { leconId }, data: { questions } });
+
+  revalidatePath(`/admin/formations/${formationId}/lecons/${leconId}`);
+  redirect(`/admin/formations/${formationId}/lecons/${leconId}`);
+}
+
+// ---- Inscriptions & certificats ----
+
+export async function inscrireEleve(formationId: string, sessionId: string, formData: FormData) {
+  await requireAdmin();
+
+  const email = str(formData, "email").toLowerCase();
+  const eleve = await prisma.user.findUnique({ where: { email } });
+  if (!eleve) redirect(`/admin/formations/${formationId}?erreur=eleve-introuvable`);
+
+  const sessionFormation = await prisma.sessionformation.findUnique({ where: { id: sessionId } });
+  if (!sessionFormation || sessionFormation.formationId !== formationId) {
+    redirect(`/admin/formations/${formationId}`);
+  }
+
+  const deja = await prisma.inscription.findUnique({
+    where: { eleveId_sessionId: { eleveId: eleve.id, sessionId } },
+  });
+  if (deja) redirect(`/admin/formations/${formationId}?erreur=deja-inscrite`);
+
+  await prisma.$transaction([
+    prisma.inscription.create({
+      data: { eleveId: eleve.id, sessionId, statut: "CONFIRMEE" },
+    }),
+    prisma.sessionformation.update({
+      where: { id: sessionId },
+      data: { placesRestantes: { decrement: sessionFormation.placesRestantes > 0 ? 1 : 0 } },
+    }),
+  ]);
+
+  revalidatePath(`/admin/formations/${formationId}`);
+  redirect(`/admin/formations/${formationId}?maj=inscrite`);
+}
+
+export async function validerCertificat(formationId: string, inscriptionId: string) {
+  await requireAdmin();
+
+  const inscription = await prisma.inscription.findUnique({
+    where: { id: inscriptionId },
+    include: { session: true, certificat: true },
+  });
+  if (!inscription || inscription.session.formationId !== formationId) {
+    redirect(`/admin/formations/${formationId}`);
+  }
+  if (inscription.certificat) redirect(`/admin/formations/${formationId}`);
+
+  const numero = `RG-${new Date().getFullYear()}-${inscriptionId.slice(-8).toUpperCase()}`;
+  await prisma.certificat.create({
+    data: { inscriptionId, eleveId: inscription.eleveId, numero },
+  });
+
+  revalidatePath(`/admin/formations/${formationId}`);
+  revalidatePath(`/espace/formations/${formationId}`);
+  redirect(`/admin/formations/${formationId}?maj=certificat`);
 }
 
 // ---- Prestations ----

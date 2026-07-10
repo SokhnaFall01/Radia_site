@@ -181,7 +181,10 @@ model Lecon {
   formationId String
   titre       String
   ordre       Int
+  // Texte du cours affiché sur la page de la leçon
+  contenu     String   @default("")
   videoUrl    String?
+  // Nom de fichier dans data/cours (servi par une route authentifiée)
   pdfUrl      String?
 
   quiz         Quiz?

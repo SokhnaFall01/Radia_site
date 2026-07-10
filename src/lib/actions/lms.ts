@@ -25,25 +25,6 @@ async function assertAccess(eleveId: string, leconId: string) {
   return { lecon, inscription };
 }
 
-async function maybeIssueCertificate(eleveId: string, formationId: string, inscriptionId: string) {
-  const existing = await prisma.certificat.findUnique({ where: { inscriptionId } });
-  if (existing) return;
-
-  const lecons = await prisma.lecon.findMany({ where: { formationId }, select: { id: true } });
-  if (lecons.length === 0) return;
-
-  const progressions = await prisma.progression.findMany({
-    where: { eleveId, leconId: { in: lecons.map((l) => l.id) }, terminee: true },
-  });
-
-  if (progressions.length < lecons.length) return;
-
-  const numero = `RG-${new Date().getFullYear()}-${inscriptionId.slice(-8).toUpperCase()}`;
-  await prisma.certificat.create({
-    data: { inscriptionId, eleveId, numero },
-  });
-}
-
 export async function markLeconComplete(leconId: string) {
   const session = await verifySession();
   if (!session) redirect("/connexion");
@@ -57,7 +38,6 @@ export async function markLeconComplete(leconId: string) {
     create: { eleveId: session.userId, leconId, terminee: true },
   });
 
-  await maybeIssueCertificate(session.userId, access.lecon.formationId, access.inscription.id);
   revalidatePath(`/espace/formations/${access.lecon.formationId}`);
   redirect(`/espace/formations/${access.lecon.formationId}`);
 }
@@ -86,10 +66,6 @@ export async function submitQuiz(leconId: string, formData: FormData) {
     update: { terminee, score },
     create: { eleveId: session.userId, leconId, terminee, score },
   });
-
-  if (terminee) {
-    await maybeIssueCertificate(session.userId, access.lecon.formationId, access.inscription.id);
-  }
 
   revalidatePath(`/espace/formations/${access.lecon.formationId}/lecons/${leconId}`);
   redirect(`/espace/formations/${access.lecon.formationId}/lecons/${leconId}?score=${score}`);

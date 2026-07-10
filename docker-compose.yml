@@ -12,6 +12,7 @@ services:
       - "3000"
     volumes:
       - uploads_data:/app/public/uploads
+      - cours_data:/app/data
 
   db:
     image: postgres:16-alpine
@@ -48,3 +49,4 @@ volumes:
   caddy_data:
   caddy_config:
   uploads_data:
+  cours_data:

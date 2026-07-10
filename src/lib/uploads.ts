@@ -31,3 +31,30 @@ export async function saveUploadedPhoto(file: File | null): Promise<string | nul
 
   return `/uploads/${filename}`;
 }
+
+// Les supports de cours ne vont PAS dans public/ : ils sont servis par une
+// route authentifiée réservée aux élèves inscrites (et à l'admin).
+const COURS_DIR = path.join(process.cwd(), "data", "cours");
+
+export function coursFilePath(filename: string) {
+  return path.join(COURS_DIR, filename);
+}
+
+export async function saveFichierCours(file: File | null): Promise<string | null> {
+  if (!file || file.size === 0) return null;
+
+  if (file.type !== "application/pdf") {
+    throw new Error("Seuls les fichiers PDF sont acceptés comme support de cours.");
+  }
+  if (file.size > MAX_SIZE_BYTES) {
+    throw new Error("Fichier trop volumineux (10 Mo maximum).");
+  }
+
+  await mkdir(COURS_DIR, { recursive: true });
+
+  const filename = `${crypto.randomUUID()}.pdf`;
+  const buffer = Buffer.from(await file.arrayBuffer());
+  await writeFile(coursFilePath(filename), buffer);
+
+  return filename;
+}

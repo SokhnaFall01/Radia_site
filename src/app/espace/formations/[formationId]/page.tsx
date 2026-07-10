@@ -38,13 +38,21 @@ export default async function FormationEspacePage({
       </p>
       <h1 className="font-display mt-3 text-2xl uppercase tracking-[0.12em]">{formation.titre}</h1>
 
-      {certificat && (
+      {certificat ? (
         <a
           href={`/api/certificats/${certificat.id}`}
           className="mt-6 inline-block border border-[var(--brass)] bg-[var(--blush)] px-5 py-3 text-xs uppercase tracking-[0.1em]"
         >
           Télécharger mon certificat ({certificat.numero})
         </a>
+      ) : (
+        lecons.length > 0 &&
+        lecons.every((l) => progressionByLecon.get(l.id)?.terminee) && (
+          <p className="mt-6 border border-[var(--brass)] bg-[var(--blush)] px-4 py-3 text-sm">
+            Félicitations, toutes les leçons sont terminées ! Votre certificat sera disponible ici
+            dès validation par la formatrice.
+          </p>
+        )
       )}
 
       <ul className="mt-8 flex flex-col gap-3">

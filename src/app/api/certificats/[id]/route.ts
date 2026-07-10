@@ -1,7 +1,17 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { NextResponse } from "next/server";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb, type PDFFont } from "pdf-lib";
 import { prisma } from "@/lib/db";
 import { verifySession } from "@/lib/dal";
+
+const BRUN = rgb(0.231, 0.165, 0.125); // #3b2a20
+const BEIGE = rgb(0.863, 0.804, 0.725); // #dccdb9
+const FOND = rgb(0.98, 0.969, 0.949); // #faf7f2
+
+function centerX(text: string, font: PDFFont, size: number, pageWidth: number) {
+  return (pageWidth - font.widthOfTextAtSize(text, size)) / 2;
+}
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await verifySession();
@@ -19,64 +29,76 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   }
 
   const formation = certificat.inscription.session.formation;
+  const sessionFormation = certificat.inscription.session;
 
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([842, 595]);
-  const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const brass = rgb(0.66, 0.5, 0.31);
-  const noir = rgb(0.08, 0.08, 0.06);
+  const { width, height } = page.getSize();
 
-  page.drawRectangle({ x: 20, y: 20, width: 802, height: 555, borderColor: noir, borderWidth: 2 });
+  const serif = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+  const serifBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+  const serifItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
+  const sans = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-  page.drawText("RADIA GLAM ACADEMY", {
-    x: 300,
-    y: 480,
-    size: 20,
-    font,
-    color: noir,
+  const logoPng = await pdfDoc.embedPng(
+    await readFile(path.join(process.cwd(), "public", "brand", "logo-principal.png")),
+  );
+  const monogrammePng = await pdfDoc.embedPng(
+    await readFile(path.join(process.cwd(), "public", "brand", "monogramme.png")),
+  );
+
+  // Fond et double cadre aux couleurs de la marque
+  page.drawRectangle({ x: 0, y: 0, width, height, color: FOND });
+  page.drawRectangle({ x: 24, y: 24, width: width - 48, height: height - 48, borderColor: BRUN, borderWidth: 2 });
+  page.drawRectangle({ x: 32, y: 32, width: width - 64, height: height - 64, borderColor: BEIGE, borderWidth: 1 });
+
+  // Logo en tête
+  const logoH = 130;
+  const logoW = (logoPng.width / logoPng.height) * logoH;
+  page.drawImage(logoPng, { x: (width - logoW) / 2, y: height - 60 - logoH, width: logoW, height: logoH });
+
+  // Titre
+  const titre = "CERTIFICAT DE RÉUSSITE";
+  page.drawText(titre, { x: centerX(titre, serifBold, 26, width), y: height - 235, size: 26, font: serifBold, color: BRUN });
+  page.drawLine({ start: { x: width / 2 - 90, y: height - 248 }, end: { x: width / 2 + 90, y: height - 248 }, thickness: 1, color: BEIGE });
+
+  const decerne = "est décerné à";
+  page.drawText(decerne, { x: centerX(decerne, serifItalic, 14, width), y: height - 278, size: 14, font: serifItalic, color: BRUN });
+
+  const nom = certificat.eleve.nom;
+  page.drawText(nom, { x: centerX(nom, serifBold, 30, width), y: height - 318, size: 30, font: serifBold, color: BRUN });
+
+  const pour = "pour avoir suivi avec succès la formation";
+  page.drawText(pour, { x: centerX(pour, serif, 13, width), y: height - 348, size: 13, font: serif, color: BRUN });
+
+  const titreFormation = formation.titre;
+  page.drawText(titreFormation, {
+    x: centerX(titreFormation, serifBold, 19, width),
+    y: height - 378,
+    size: 19,
+    font: serifBold,
+    color: BRUN,
   });
-  page.drawText("Certificat de réussite", {
-    x: 320,
-    y: 440,
-    size: 16,
-    font: fontRegular,
-    color: brass,
-  });
-  page.drawText(certificat.eleve.nom, {
-    x: 421 - certificat.eleve.nom.length * 6,
-    y: 340,
-    size: 28,
-    font,
-    color: noir,
-  });
-  page.drawText(`a suivi avec succes la formation`, {
-    x: 300,
-    y: 300,
-    size: 12,
-    font: fontRegular,
-    color: noir,
-  });
-  page.drawText(formation.titre, {
-    x: 421 - formation.titre.length * 5,
-    y: 270,
-    size: 18,
-    font,
-    color: brass,
-  });
-  page.drawText(`Numero : ${certificat.numero}`, {
-    x: 60,
-    y: 60,
-    size: 10,
-    font: fontRegular,
-    color: noir,
-  });
-  page.drawText(`Délivré le ${certificat.delivreLe.toLocaleDateString("fr-FR")}`, {
-    x: 620,
-    y: 60,
-    size: 10,
-    font: fontRegular,
-    color: noir,
+
+  const periode = `${formation.duree} — session du ${sessionFormation.dateDebut.toLocaleDateString("fr-FR")} au ${sessionFormation.dateFin.toLocaleDateString("fr-FR")}`;
+  page.drawText(periode, { x: centerX(periode, serif, 11, width), y: height - 400, size: 11, font: serif, color: BRUN });
+
+  // Bloc signature (bas droite)
+  const sigX = width - 260;
+  page.drawText("Radia Glam", { x: sigX + 30, y: 130, size: 26, font: serifItalic, color: BRUN });
+  page.drawLine({ start: { x: sigX, y: 118 }, end: { x: sigX + 200, y: 118 }, thickness: 1, color: BRUN });
+  page.drawText("La fondatrice", { x: sigX + 60, y: 102, size: 10, font: sans, color: BRUN });
+  page.drawText("Révèle ta lumière.", { x: sigX + 48, y: 86, size: 11, font: serifItalic, color: BRUN });
+
+  // Monogramme (bas gauche) + mentions officielles
+  page.drawImage(monogrammePng, { x: 64, y: 84, width: 64, height: 64 });
+  page.drawText(`Certificat n° ${certificat.numero}`, { x: 64, y: 66, size: 9, font: sans, color: BRUN });
+  page.drawText(`Délivré le ${certificat.delivreLe.toLocaleDateString("fr-FR")} — Radia Glam Academy, Dakar`, {
+    x: 64,
+    y: 52,
+    size: 9,
+    font: sans,
+    color: BRUN,
   });
 
   const pdfBytes = await pdfDoc.save();

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { parseQuizQuestions } from "@/lib/quiz";
 import { markLeconComplete, submitQuiz } from "@/lib/actions/lms";
 import QuizForm from "./quiz-form";
+import LecteurVideo from "./lecteur-video";
 
 export default async function LeconPage({
   params,
@@ -33,7 +34,13 @@ export default async function LeconPage({
     where: { eleveId_leconId: { eleveId: session.userId, leconId } },
   });
 
+  const eleve = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: { nom: true, email: true },
+  });
+
   const questions = lecon.quiz ? parseQuizQuestions(lecon.quiz.questions) : [];
+  const paragraphes = lecon.contenu.split("\n").map((l) => l.trim()).filter(Boolean);
 
   return (
     <section className="mx-auto max-w-2xl px-6 py-20">
@@ -43,15 +50,28 @@ export default async function LeconPage({
       <h1 className="font-display mt-3 text-2xl uppercase tracking-[0.12em]">{lecon.titre}</h1>
 
       {lecon.videoUrl && (
-        <video controls className="mt-6 w-full border border-[var(--ligne)]" src={lecon.videoUrl} />
+        <LecteurVideo
+          videoUrl={lecon.videoUrl}
+          filigrane={`${eleve?.nom ?? ""} — ${eleve?.email ?? ""}`}
+        />
+      )}
+
+      {paragraphes.length > 0 && (
+        <div className="mt-6 flex select-none flex-col gap-3 text-sm leading-relaxed text-[var(--gris)]">
+          {paragraphes.map((par, i) => (
+            <p key={i}>{par}</p>
+          ))}
+        </div>
       )}
 
       {lecon.pdfUrl && (
         <a
-          href={lecon.pdfUrl}
-          className="mt-4 inline-block border border-[var(--noir)] px-5 py-3 text-xs uppercase tracking-[0.1em]"
+          href={`/api/cours/${lecon.id}/fichier`}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-6 inline-block border border-[var(--noir)] px-5 py-3 text-xs uppercase tracking-[0.1em]"
         >
-          Télécharger le support PDF
+          Consulter le support PDF
         </a>
       )}
 
