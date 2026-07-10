@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
+/* Palette dérivée du logo : brun #3b2a20 et beige #dccdb9 */
 :root {
-  --porcelaine: #fbf9f6;
-  --noir: #151310;
-  --brass: #a87f4f;
-  --blush: #ebdcd2;
-  --gris: #5c554c;
-  --ligne: rgba(21, 19, 16, 0.15);
+  --porcelaine: #faf7f2;
+  --noir: #3b2a20;
+  --brass: #8f6f4e;
+  --blush: #dccdb9;
+  --gris: #6a5a4b;
+  --ligne: rgba(59, 42, 32, 0.18);
 }
 
 @theme inline {

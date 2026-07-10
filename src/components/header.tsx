@@ -38,8 +38,10 @@ export default async function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <div className="flex items-center gap-4">
           <MobileNav navLinks={navLinks} />
-          <Link href="/" className="font-display text-sm tracking-[0.22em] uppercase">
-            Radia Glam
+          <Link href="/" className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/monogramme.svg" alt="" className="h-9 w-9" />
+            <span className="font-display text-sm tracking-[0.22em] uppercase">Radia Glam</span>
           </Link>
         </div>
         <nav className="hidden gap-8 text-xs tracking-[0.1em] uppercase md:flex">
@@ -70,7 +72,7 @@ export default async function Header() {
               </Link>
               <form action={logout}>
                 <button type="submit" className="hover:text-[var(--brass)]">
-                  Deconnexion
+                  Déconnexion
                 </button>
               </form>
             </>
@@ -88,7 +90,7 @@ export default async function Header() {
                 href="/inscription"
                 className="border border-[var(--noir)] px-4 py-2 hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
               >
-                Creer un compte
+                Créer un compte
               </Link>
             </>
           )}

@@ -31,9 +31,15 @@ export default async function Home() {
           />
         )}
         <div
-          className={`relative mx-auto max-w-4xl px-6 py-28 text-center ${t.heroPhoto ? "bg-[var(--porcelaine)]/80" : ""}`}
+          className={`relative mx-auto max-w-4xl px-6 py-20 text-center ${t.heroPhoto ? "bg-[var(--porcelaine)]/80" : ""}`}
         >
-          <p className="text-xs uppercase tracking-[0.35em] text-[var(--brass)]">{t.heroKicker}</p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/logo-principal.svg"
+            alt="Radia Glam — Makeup Studio, Academy, Cosmetics. Révèle ta lumière."
+            className="mx-auto h-44 w-auto sm:h-52"
+          />
+          <p className="mt-8 text-xs uppercase tracking-[0.35em] text-[var(--brass)]">{t.heroKicker}</p>
           <h1 className="font-display mt-7 text-4xl uppercase tracking-[0.1em] sm:text-6xl">
             {t.heroTitre}
           </h1>

@@ -20,8 +20,15 @@ export default async function Footer() {
     <footer className="border-t border-[var(--ligne)] bg-[var(--noir)] py-14 text-[var(--porcelaine)]">
       <div className="mx-auto grid max-w-5xl gap-10 px-6 text-sm sm:grid-cols-3">
         <div>
-          <p className="font-display text-sm tracking-[0.22em] uppercase">Radia Glam</p>
-          <p className="mt-2 text-xs uppercase tracking-[0.1em] text-white/60">Beauty &amp; Co.</p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/monogramme-clair.svg" alt="" className="h-12 w-12" />
+          <p className="font-display mt-3 text-sm tracking-[0.22em] uppercase">Radia Glam</p>
+          <p className="mt-2 text-xs uppercase tracking-[0.1em] text-white/60">
+            Makeup Studio · Academy · Cosmetics
+          </p>
+          <p className="font-italic-serif mt-3 text-base text-[var(--blush)]">
+            Révèle ta lumière.
+          </p>
         </div>
 
         <div>
@@ -84,7 +91,7 @@ export default async function Footer() {
       </div>
 
       <p className="mt-12 text-center text-xs uppercase tracking-[0.14em] text-white/40">
-        Radia Glam Beauty &amp; Co. — Dakar, Senegal
+        Radia Glam Beauty &amp; Co. — Dakar, Sénégal
       </p>
     </footer>
   );
