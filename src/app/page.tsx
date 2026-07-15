@@ -13,7 +13,10 @@ export default async function Home() {
   const [prestations, formations, produits, t, galerie] = await Promise.all([
     prisma.prestation.findMany({ where: { actif: true }, orderBy: { nom: "asc" }, take: 3 }),
     prisma.formation.findMany({ where: { publie: true }, orderBy: { createdAt: "desc" }, take: 5 }),
-    prisma.produit.findMany({ orderBy: { createdAt: "desc" }, take: 4 }),
+    prisma.produit.findMany({
+      orderBy: [{ misEnAvant: "desc" }, { createdAt: "desc" }],
+      take: 4,
+    }),
     getSiteTextes(),
     prisma.photoGalerie.findMany({ orderBy: { ordre: "asc" }, take: 4 }),
   ]);
@@ -125,6 +128,81 @@ export default async function Home() {
               className="mt-5 inline-block border border-[var(--noir)] bg-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.14em] text-[var(--porcelaine)]"
             >
               Demander un devis
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Boutique */}
+      <section id="boutique" className="py-24">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="mb-14 text-center">
+            <div className="font-display inline-block border border-[var(--noir)] px-8 py-3 text-lg uppercase tracking-[0.2em]">
+              Boutique Radia Glam
+            </div>
+            <p className="font-italic-serif mt-4 text-lg text-[var(--brass)]">
+              Les coups de cœur du salon, sélectionnés avec exigence
+            </p>
+          </div>
+
+          {produits.length === 0 ? (
+            <p className="text-center text-sm text-[var(--gris)]">
+              La boutique sera bientôt disponible.
+            </p>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {produits.map((produit) => {
+                const enRupture = produit.stock <= 0;
+                return (
+                  <div key={produit.id} className="relative border border-[var(--ligne)] bg-white text-center">
+                    {produit.misEnAvant && (
+                      <span className="absolute left-3 top-3 z-10 bg-[var(--noir)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--porcelaine)]">
+                        Coup de cœur
+                      </span>
+                    )}
+                    {produit.photos[0] ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={produit.photos[0]} alt={produit.nom} className="h-44 w-full object-cover" />
+                    ) : (
+                      <div className="flex h-44 items-center justify-center bg-gradient-to-br from-[#f0e6dc] to-[#d9c0a8] text-sm italic text-[var(--noir)]/50">
+                        Photo produit
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <p className="text-xs uppercase tracking-[0.2em] text-[var(--brass)]">
+                        {produit.categorie}
+                      </p>
+                      <h3 className="mt-1 text-sm uppercase tracking-[0.1em]">{produit.nom}</h3>
+                      <p className="font-italic-serif my-3 text-lg">
+                        {produit.prixFcfa.toLocaleString("fr-FR")} FCFA
+                      </p>
+                      {enRupture ? (
+                        <p className="text-xs uppercase tracking-[0.1em] text-red-700">
+                          Rupture de stock
+                        </p>
+                      ) : (
+                        <form action={ajouterAuPanier.bind(null, produit.id)}>
+                          <input type="hidden" name="quantite" value="1" />
+                          <button
+                            type="submit"
+                            className="border border-[var(--noir)] px-5 py-2.5 text-xs uppercase tracking-[0.14em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
+                          >
+                            Ajouter au panier
+                          </button>
+                        </form>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div className="mt-12 text-center">
+            <Link
+              href="/boutique"
+              className="border border-[var(--noir)] px-8 py-3 text-xs uppercase tracking-[0.18em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
+            >
+              Voir toute la boutique
             </Link>
           </div>
         </div>
@@ -269,76 +347,6 @@ export default async function Home() {
               className="mt-8 inline-block border border-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.14em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
             >
               En savoir plus
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Boutique */}
-      <section id="boutique" className="py-24">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="mb-14 text-center">
-            <div className="font-display inline-block border border-[var(--noir)] px-8 py-3 text-lg uppercase tracking-[0.2em]">
-              Boutique Radia Glam
-            </div>
-            <p className="font-italic-serif mt-4 text-lg text-[var(--brass)]">
-              Nos essentiels, sélectionnés avec exigence
-            </p>
-          </div>
-
-          {produits.length === 0 ? (
-            <p className="text-center text-sm text-[var(--gris)]">
-              La boutique sera bientôt disponible.
-            </p>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {produits.map((produit) => {
-                const enRupture = produit.stock <= 0;
-                return (
-                  <div key={produit.id} className="border border-[var(--ligne)] bg-white text-center">
-                    {produit.photos[0] ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={produit.photos[0]} alt={produit.nom} className="h-44 w-full object-cover" />
-                    ) : (
-                      <div className="flex h-44 items-center justify-center bg-gradient-to-br from-[#f0e6dc] to-[#d9c0a8] text-sm italic text-[var(--noir)]/50">
-                        Photo produit
-                      </div>
-                    )}
-                    <div className="p-5">
-                      <p className="text-xs uppercase tracking-[0.2em] text-[var(--brass)]">
-                        {produit.categorie}
-                      </p>
-                      <h3 className="mt-1 text-sm uppercase tracking-[0.1em]">{produit.nom}</h3>
-                      <p className="font-italic-serif my-3 text-lg">
-                        {produit.prixFcfa.toLocaleString("fr-FR")} FCFA
-                      </p>
-                      {enRupture ? (
-                        <p className="text-xs uppercase tracking-[0.1em] text-red-700">
-                          Rupture de stock
-                        </p>
-                      ) : (
-                        <form action={ajouterAuPanier.bind(null, produit.id)}>
-                          <input type="hidden" name="quantite" value="1" />
-                          <button
-                            type="submit"
-                            className="border border-[var(--noir)] px-5 py-2.5 text-xs uppercase tracking-[0.14em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
-                          >
-                            Ajouter au panier
-                          </button>
-                        </form>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          <div className="mt-12 text-center">
-            <Link
-              href="/boutique"
-              className="border border-[var(--noir)] px-8 py-3 text-xs uppercase tracking-[0.18em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
-            >
-              Voir toute la boutique
             </Link>
           </div>
         </div>

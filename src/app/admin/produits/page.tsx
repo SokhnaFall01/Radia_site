@@ -73,6 +73,10 @@ export default async function AdminProduitsPage({
                 <label className="text-xs uppercase tracking-[0.1em]">Seuil alerte</label>
                 <input name="seuilAlerte" type="number" min={0} defaultValue={p.seuilAlerte} className="mt-1 block w-20 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
               </div>
+              <label className="flex items-center gap-2 pb-2.5 text-sm">
+                <input type="checkbox" name="misEnAvant" defaultChecked={p.misEnAvant} />
+                Mis en avant (accueil)
+              </label>
               <button type="submit" className="border border-[var(--noir)] px-4 py-2.5 text-xs uppercase tracking-[0.1em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]">
                 Enregistrer
               </button>
@@ -120,8 +124,12 @@ export default async function AdminProduitsPage({
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="seuilAlerte">Seuil alerte</label>
           <input id="seuilAlerte" name="seuilAlerte" type="number" min={0} defaultValue={5} className="mt-1 w-20 border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
+        <label className="flex items-center gap-2 pb-2.5 text-sm">
+          <input type="checkbox" name="misEnAvant" />
+          Mis en avant (accueil)
+        </label>
         <button type="submit" className="border border-[var(--noir)] bg-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.12em] text-[var(--porcelaine)]">
-          Creer
+          Créer
         </button>
       </form>
     </section>

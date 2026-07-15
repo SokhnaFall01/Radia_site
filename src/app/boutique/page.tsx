@@ -90,6 +90,11 @@ export default async function BoutiquePage({
                   <span className="absolute left-3 top-3 bg-[var(--porcelaine)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--brass)]">
                     {produit.categorie}
                   </span>
+                  {produit.misEnAvant && (
+                    <span className="absolute right-3 top-3 bg-[var(--noir)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--porcelaine)]">
+                      Coup de cœur
+                    </span>
+                  )}
                   {enRupture && (
                     <div className="absolute inset-0 flex items-center justify-center bg-[var(--noir)]/60">
                       <span className="border border-[var(--porcelaine)] px-4 py-2 text-xs uppercase tracking-[0.14em] text-[var(--porcelaine)]">

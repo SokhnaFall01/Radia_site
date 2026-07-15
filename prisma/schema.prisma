@@ -285,6 +285,8 @@ model Produit {
   categorie    String
   stock        Int      @default(0)
   seuilAlerte  Int      @default(5)
+  // Produit vitrine choisi par l'admin, affiché en tête de l'accueil
+  misEnAvant   Boolean  @default(false)
   createdAt    DateTime @default(now())
 
   lignesCommande LigneCommande[]

@@ -411,6 +411,7 @@ export async function createProduit(formData: FormData) {
       categorie: str(formData, "categorie"),
       stock: num(formData, "stock"),
       seuilAlerte: num(formData, "seuilAlerte") || 5,
+      misEnAvant: formData.get("misEnAvant") === "on",
       photos: photoUrl ? [photoUrl] : [],
     },
   });
@@ -440,6 +441,7 @@ export async function updateProduit(id: string, formData: FormData) {
       categorie: str(formData, "categorie"),
       stock: num(formData, "stock"),
       seuilAlerte: num(formData, "seuilAlerte") || 5,
+      misEnAvant: formData.get("misEnAvant") === "on",
       photos: photoUrl ? [photoUrl] : (existing?.photos ?? []),
     },
   });
