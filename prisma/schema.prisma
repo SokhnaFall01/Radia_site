@@ -188,6 +188,9 @@ model Lecon {
   // Vidéo hébergée sur le serveur : nom de fichier dans data/cours,
   // servie en streaming par une route authentifiée. Prioritaire sur videoUrl.
   videoFichier String?
+  // Vidéo protégée par DRM chez VdoCipher (identifiant de la vidéo dans
+  // leur tableau de bord). Prioritaire sur videoFichier et videoUrl.
+  vdocipherId  String?
   // Nom de fichier dans data/cours (servi par une route authentifiée)
   pdfUrl      String?
 

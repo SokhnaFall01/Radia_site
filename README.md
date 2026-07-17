@@ -51,6 +51,9 @@ Créez un fichier `.env` à la racine (utilisé par `docker-compose.yml`) :
 POSTGRES_PASSWORD=choisissez-un-mot-de-passe-fort
 SESSION_SECRET=<sortie de: openssl rand -base64 32>
 DOMAIN=votre-domaine.com
+# Optionnel — vidéos de cours protégées par DRM (captures d'écran bloquées
+# sur mobile) : clé « API Secret » du tableau de bord VdoCipher.
+VDOCIPHER_API_SECRET=
 ```
 
 **Vous n'avez pas encore de nom de domaine ?** Vous pouvez obtenir un lien HTTPS

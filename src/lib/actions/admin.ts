@@ -8,6 +8,7 @@ import { saveUploadedPhoto, saveFichierCours } from "@/lib/uploads";
 import { CONTACT_KEYS } from "@/lib/contenu";
 import { SITE_TEXT_KEYS } from "@/lib/contenuTextes";
 import { parseQuizQuestions } from "@/lib/quiz";
+import { vdocipherIdValide } from "@/lib/vdocipher";
 
 async function requireAdmin() {
   const session = await verifySession();
@@ -190,6 +191,11 @@ export async function updateLecon(formationId: string, leconId: string, formData
 
   const existing = await prisma.lecon.findUnique({ where: { id: leconId }, select: { pdfUrl: true } });
 
+  const vdocipherId = str(formData, "vdocipherId");
+  if (vdocipherId && !vdocipherIdValide(vdocipherId)) {
+    redirect(`/admin/formations/${formationId}/lecons/${leconId}?erreur=vdocipher`);
+  }
+
   await prisma.lecon.update({
     where: { id: leconId },
     data: {
@@ -197,6 +203,7 @@ export async function updateLecon(formationId: string, leconId: string, formData
       ordre: num(formData, "ordre") || 1,
       contenu: str(formData, "contenu"),
       videoUrl: str(formData, "videoUrl") || null,
+      vdocipherId: vdocipherId || null,
       pdfUrl: pdfName ?? existing?.pdfUrl ?? null,
     },
   });

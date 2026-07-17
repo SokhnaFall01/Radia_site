@@ -5,6 +5,8 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-radia}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-radia_glam}?schema=public
       SESSION_SECRET: ${SESSION_SECRET}
+      # Optionnel : active les vidéos DRM VdoCipher (clé API du tableau de bord)
+      VDOCIPHER_API_SECRET: ${VDOCIPHER_API_SECRET:-}
     depends_on:
       db:
         condition: service_healthy

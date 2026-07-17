@@ -184,7 +184,7 @@ export default async function AdminFormationEditPage({
                 {lecon.ordre}. {lecon.titre}
               </Link>
               <p className="text-xs text-[var(--gris)]">
-                {lecon.videoFichier ? "Vidéo hébergée · " : lecon.videoUrl ? "Vidéo (lien) · " : ""}
+                {lecon.vdocipherId ? "Vidéo DRM · " : lecon.videoFichier ? "Vidéo hébergée · " : lecon.videoUrl ? "Vidéo (lien) · " : ""}
                 {lecon.pdfUrl ? "PDF · " : ""}
                 {lecon.quiz ? "Quiz" : "Sans quiz"}
               </p>

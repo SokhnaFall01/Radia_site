@@ -44,6 +44,12 @@ export default async function AdminLeconPage({
           Fichier invalide (PDF, 10 Mo max).
         </p>
       )}
+      {erreur === "vdocipher" && (
+        <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
+          ID de vidéo VdoCipher invalide : copiez l&apos;identifiant exact (Video ID) depuis le
+          tableau de bord VdoCipher.
+        </p>
+      )}
       {erreur === "question" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
           Question invalide : renseignez l&apos;énoncé, au moins 2 options, et une bonne réponse
@@ -65,6 +71,17 @@ export default async function AdminLeconPage({
         <div>
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="contenu">Texte du cours</label>
           <textarea id="contenu" name="contenu" rows={6} defaultValue={lecon.contenu} placeholder="Un paragraphe par ligne." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="vdocipherId">
+            Vidéo protégée DRM — ID VdoCipher (recommandé)
+          </label>
+          <input id="vdocipherId" name="vdocipherId" defaultValue={lecon.vdocipherId ?? ""} placeholder="ex: 1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+          <p className="mt-1 text-xs text-[var(--gris)]">
+            Téléversez la vidéo sur le tableau de bord VdoCipher puis collez ici son « Video ID ».
+            Captures et enregistrements d&apos;écran bloqués sur la plupart des téléphones. Cette
+            vidéo est prioritaire sur les deux options ci-dessous.
+          </p>
         </div>
         <UploadVideo leconId={leconId} videoPresente={Boolean(lecon.videoFichier)} />
         <div>

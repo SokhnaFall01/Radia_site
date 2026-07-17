@@ -6,6 +6,8 @@ import { parseQuizQuestions } from "@/lib/quiz";
 import { markLeconComplete, submitQuiz } from "@/lib/actions/lms";
 import QuizForm from "./quiz-form";
 import LecteurVideo from "./lecteur-video";
+import LecteurDrm from "./lecteur-drm";
+import { vdocipherActif, getOtpVdocipher, vdocipherEmbedUrl } from "@/lib/vdocipher";
 
 export default async function LeconPage({
   params,
@@ -41,6 +43,10 @@ export default async function LeconPage({
 
   const questions = lecon.quiz ? parseQuizQuestions(lecon.quiz.questions) : [];
   const paragraphes = lecon.contenu.split("\n").map((l) => l.trim()).filter(Boolean);
+  const filigrane = `${eleve?.nom ?? ""} — ${eleve?.email ?? ""}`;
+
+  const drm = lecon.vdocipherId && vdocipherActif();
+  const otpDrm = drm ? await getOtpVdocipher(lecon.vdocipherId!, filigrane) : null;
 
   return (
     <section className="mx-auto max-w-2xl px-6 py-20">
@@ -49,11 +55,20 @@ export default async function LeconPage({
       </p>
       <h1 className="font-display mt-3 text-2xl uppercase tracking-[0.12em]">{lecon.titre}</h1>
 
-      {(lecon.videoFichier || lecon.videoUrl) && (
-        <LecteurVideo
-          videoUrl={lecon.videoFichier ? `/api/cours/${lecon.id}/video` : lecon.videoUrl!}
-          filigrane={`${eleve?.nom ?? ""} — ${eleve?.email ?? ""}`}
-        />
+      {otpDrm ? (
+        <LecteurDrm embedUrl={vdocipherEmbedUrl(otpDrm)} />
+      ) : drm ? (
+        <p className="mt-6 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
+          La vidéo protégée est momentanément indisponible. Réessayez dans quelques minutes ou
+          contactez le salon.
+        </p>
+      ) : (
+        (lecon.videoFichier || lecon.videoUrl) && (
+          <LecteurVideo
+            videoUrl={lecon.videoFichier ? `/api/cours/${lecon.id}/video` : lecon.videoUrl!}
+            filigrane={filigrane}
+          />
+        )
       )}
 
       {paragraphes.length > 0 && (
