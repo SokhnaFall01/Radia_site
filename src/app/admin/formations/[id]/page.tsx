@@ -94,6 +94,12 @@ export default async function AdminFormationEditPage({
           Cette élève est déjà inscrite à cette session.
         </p>
       )}
+      {erreur === "vdocipher" && (
+        <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
+          ID de vidéo VdoCipher invalide : copiez l&apos;identifiant exact (Video ID) depuis le
+          tableau de bord VdoCipher.
+        </p>
+      )}
       {erreur === "pdf" && (
         <p className="mt-4 border border-red-700 bg-red-50 px-4 py-3 text-sm text-red-700">
           Fichier invalide (PDF, 10 Mo max).
@@ -214,7 +220,18 @@ export default async function AdminFormationEditPage({
           <textarea id="lecon-contenu" name="contenu" rows={4} placeholder="Le contenu affiché sur la page de la leçon. Un paragraphe par ligne." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>
-          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="lecon-video">Lien vidéo (optionnel)</label>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="lecon-vdocipher">
+            Vidéo protégée DRM — ID VdoCipher (recommandé)
+          </label>
+          <input id="lecon-vdocipher" name="vdocipherId" placeholder="ex: 1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+          <p className="mt-1 text-xs text-[var(--gris)]">
+            Téléversez la vidéo sur le tableau de bord VdoCipher puis collez ici son « Video ID ».
+          </p>
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="lecon-video">
+            Ou lien vidéo externe (optionnel — ignoré si un ID VdoCipher est renseigné)
+          </label>
           <input id="lecon-video" name="videoUrl" type="url" placeholder="ex: lien YouTube non répertorié, Vimeo, ou fichier .mp4" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
         <div>

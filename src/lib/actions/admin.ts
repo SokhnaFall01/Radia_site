@@ -162,6 +162,11 @@ export async function createLecon(formationId: string, formData: FormData) {
     redirect(`/admin/formations/${formationId}?erreur=pdf`);
   }
 
+  const vdocipherId = str(formData, "vdocipherId");
+  if (vdocipherId && !vdocipherIdValide(vdocipherId)) {
+    redirect(`/admin/formations/${formationId}?erreur=vdocipher`);
+  }
+
   const count = await prisma.lecon.count({ where: { formationId } });
 
   await prisma.lecon.create({
@@ -171,6 +176,7 @@ export async function createLecon(formationId: string, formData: FormData) {
       ordre: count + 1,
       contenu: str(formData, "contenu"),
       videoUrl: str(formData, "videoUrl") || null,
+      vdocipherId: vdocipherId || null,
       pdfUrl: pdfName,
     },
   });
