@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { verifySession } from "@/lib/dal";
 import { saveUploadedPhoto } from "@/lib/uploads";
-import { CONTACT_KEYS, PAIEMENT_KEYS } from "@/lib/contenu";
+import { CONTACT_KEYS, PAIEMENT_KEYS, PASS_KEYS } from "@/lib/contenu";
 import { SITE_TEXT_KEYS } from "@/lib/contenuTextes";
 
 async function requireAdmin() {
@@ -288,6 +288,69 @@ export async function annulerInscription(inscriptionId: string) {
   redirect("/admin/inscriptions?maj=annulee");
 }
 
+export async function confirmerPass(passId: string, formData: FormData) {
+  await requireAdmin();
+
+  const pass = await prisma.pass.findUnique({ where: { id: passId } });
+  if (!pass) redirect("/admin/inscriptions");
+
+  if (pass.statut === "EN_ATTENTE_PAIEMENT") {
+    const { getInfosPass } = await import("@/lib/contenu");
+    const infos = await getInfosPass();
+    const dateDebut = new Date();
+    const dateFin = new Date(dateDebut);
+    dateFin.setMonth(dateFin.getMonth() + infos.dureeMois);
+
+    const moyenRaw = str(formData, "moyen");
+    const moyen = (MOYENS_PAIEMENT.includes(moyenRaw as MoyenPaiement)
+      ? moyenRaw
+      : "WAVE") as MoyenPaiement;
+
+    // Toutes les formations en ligne publiees, debloquees d'un coup.
+    const formations = await prisma.formation.findMany({
+      where: { publie: true, mode: "EN_LIGNE" },
+      select: { id: true },
+    });
+
+    await prisma.$transaction([
+      prisma.pass.update({
+        where: { id: passId },
+        data: { statut: "ACTIF", dateDebut, dateFin },
+      }),
+      prisma.paiement.create({
+        data: {
+          userId: pass.eleveId,
+          montantFcfa: pass.prixFcfa,
+          moyen,
+          type: "FORMATION",
+          statut: "PAYE",
+        },
+      }),
+      prisma.inscription.createMany({
+        data: formations.map((f) => ({
+          eleveId: pass.eleveId,
+          formationId: f.id,
+          statut: "CONFIRMEE" as const,
+        })),
+        skipDuplicates: true,
+      }),
+    ]);
+  }
+
+  revalidatePath("/admin/inscriptions");
+  revalidatePath("/espace/formations");
+  redirect("/admin/inscriptions?maj=pass");
+}
+
+export async function annulerPass(passId: string) {
+  await requireAdmin();
+
+  await prisma.pass.update({ where: { id: passId }, data: { statut: "ANNULE" } });
+
+  revalidatePath("/admin/inscriptions");
+  redirect("/admin/inscriptions?maj=annulee");
+}
+
 // ---- Prestations ----
 
 export async function createPrestation(formData: FormData) {
@@ -489,7 +552,7 @@ export async function deleteJourFerme(id: string) {
 export async function updateCoordonnees(formData: FormData) {
   await requireAdmin();
 
-  const clesAEnregistrer = { ...CONTACT_KEYS, ...PAIEMENT_KEYS };
+  const clesAEnregistrer = { ...CONTACT_KEYS, ...PAIEMENT_KEYS, ...PASS_KEYS };
   for (const [name, cle] of Object.entries(clesAEnregistrer)) {
     const valeur = str(formData, name);
     await prisma.contenuSite.upsert({

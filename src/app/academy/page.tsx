@@ -122,6 +122,25 @@ export default async function AcademyPage() {
             );
           })
         )}
+
+        {formations.length > 0 && (
+          <section className="mt-20 border border-[var(--noir)] bg-[var(--noir)] p-10 text-center text-[var(--porcelaine)]">
+            <p className="text-3xl">👑</p>
+            <h2 className="font-display mt-3 text-xl uppercase tracking-[0.12em]">
+              Radiaglam Academy Pass
+            </h2>
+            <p className="mx-auto mt-3 max-w-lg text-sm text-[var(--porcelaine)]/80">
+              Accedez a toutes les formations en ligne avec un seul acces. La meilleure facon de
+              progresser sans limite.
+            </p>
+            <Link
+              href="/academy/pass"
+              className="mt-6 inline-block border border-[var(--brass)] bg-[var(--brass)] px-8 py-3 text-xs uppercase tracking-[0.14em] text-[var(--noir)] hover:opacity-90"
+            >
+              Decouvrir le Pass
+            </Link>
+          </section>
+        )}
       </div>
     </div>
   );

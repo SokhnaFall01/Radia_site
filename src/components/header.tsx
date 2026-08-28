@@ -23,6 +23,7 @@ const navLinks: NavItem[] = [
       { href: "/academy", label: "Formations en ligne" },
       { href: "/academy/presentiel", label: "Formations en presentiel" },
       { href: "/academy#masterclass", label: "Masterclass" },
+      { href: "/academy/pass", label: "Pass All Access" },
       { href: "/espace/formations", label: "Mon espace" },
     ],
   },

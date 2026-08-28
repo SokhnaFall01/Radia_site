@@ -72,6 +72,33 @@ export async function demanderInscriptionFormation(formationId: string) {
   redirect(`/academy/${formationId}/acheter?demande=1`);
 }
 
+// Demande du Pass All Access (paiement manuel, validation par l'admin).
+export async function demanderPass() {
+  const session = await verifySession();
+  if (!session) {
+    redirect(`/connexion?next=${encodeURIComponent("/academy/pass/acheter")}`);
+  }
+
+  const existant = await prisma.pass.findFirst({
+    where: { eleveId: session.userId, statut: { in: ["EN_ATTENTE_PAIEMENT", "ACTIF"] } },
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (existant?.statut === "ACTIF") {
+    redirect("/espace/formations");
+  }
+
+  if (!existant) {
+    const { getInfosPass } = await import("@/lib/contenu");
+    const infos = await getInfosPass();
+    await prisma.pass.create({
+      data: { eleveId: session.userId, prixFcfa: infos.prix, statut: "EN_ATTENTE_PAIEMENT" },
+    });
+  }
+
+  redirect("/academy/pass/acheter?demande=1");
+}
+
 export async function markLeconComplete(leconId: string) {
   const session = await verifySession();
   if (!session) redirect("/connexion");

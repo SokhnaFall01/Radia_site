@@ -25,6 +25,27 @@ export const PAIEMENT_KEYS = {
 
 export type InfosPaiement = Record<keyof typeof PAIEMENT_KEYS, string>;
 
+// Radiaglam Academy Pass (acces a toutes les formations en ligne).
+export const PASS_KEYS = {
+  prix: "pass_prix",
+  dureeMois: "pass_duree_mois",
+  description: "pass_description",
+} as const;
+
+export async function getInfosPass(): Promise<{ prix: number; dureeMois: number; description: string }> {
+  const rows = await prisma.contenuSite.findMany({
+    where: { cle: { in: Object.values(PASS_KEYS) } },
+  });
+  const byKey = new Map(rows.map((r) => [r.cle, r.valeur]));
+  const prix = Number(byKey.get(PASS_KEYS.prix) ?? "");
+  const dureeMois = Number(byKey.get(PASS_KEYS.dureeMois) ?? "");
+  return {
+    prix: Number.isFinite(prix) ? prix : 0,
+    dureeMois: Number.isFinite(dureeMois) && dureeMois > 0 ? dureeMois : 12,
+    description: byKey.get(PASS_KEYS.description) ?? "",
+  };
+}
+
 export async function getInfosPaiement(): Promise<InfosPaiement> {
   const rows = await prisma.contenuSite.findMany({
     where: { cle: { in: Object.values(PAIEMENT_KEYS) } },

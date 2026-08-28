@@ -43,6 +43,13 @@ enum CategorieFormation {
   MASTERCLASS
 }
 
+enum StatutPass {
+  EN_ATTENTE_PAIEMENT
+  ACTIF
+  EXPIRE
+  ANNULE
+}
+
 enum ModeFormation {
   EN_LIGNE
   PRESENTIEL
@@ -135,8 +142,23 @@ model User {
   certificats       Certificat[]
   progressions      Progression[]
   demandesDevis     DemandeDevis[]
+  passes            Pass[]
 
   @@index([role])
+}
+
+model Pass {
+  id        String     @id @default(cuid())
+  eleve     User       @relation(fields: [eleveId], references: [id])
+  eleveId   String
+  prixFcfa  Int
+  statut    StatutPass @default(EN_ATTENTE_PAIEMENT)
+  dateDebut DateTime?
+  dateFin   DateTime?
+  createdAt DateTime   @default(now())
+
+  @@index([eleveId])
+  @@index([statut])
 }
 
 model Formation {
