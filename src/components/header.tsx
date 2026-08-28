@@ -1,16 +1,32 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/dal";
 import { logout } from "@/lib/actions/auth";
-import MobileNav from "@/components/mobile-nav";
+import MobileNav, { type NavItem } from "@/components/mobile-nav";
+import SiteNav from "@/components/site-nav";
 
-const navLinks = [
+const navLinks: NavItem[] = [
   { href: "/", label: "Accueil" },
-  { href: "/academy", label: "Academy" },
-  { href: "/reservation", label: "Reservation" },
+  {
+    href: "/reservation",
+    label: "Salon",
+    children: [
+      { href: "/reservation", label: "Reservation" },
+      { href: "/galerie", label: "Galerie" },
+      { href: "/a-propos", label: "A propos" },
+      { href: "/contact", label: "Contact" },
+    ],
+  },
+  {
+    href: "/academy",
+    label: "Academy",
+    children: [
+      { href: "/academy", label: "Formations en ligne" },
+      { href: "/academy/presentiel", label: "Formations en presentiel" },
+      { href: "/academy#masterclass", label: "Masterclass" },
+      { href: "/espace/formations", label: "Mon espace" },
+    ],
+  },
   { href: "/boutique", label: "Boutique" },
-  { href: "/galerie", label: "Galerie" },
-  { href: "/a-propos", label: "A propos" },
-  { href: "/contact", label: "Contact" },
 ];
 
 function UserIcon() {
@@ -42,13 +58,7 @@ export default async function Header() {
             Radia Glam
           </Link>
         </div>
-        <nav className="hidden gap-8 text-xs tracking-[0.1em] uppercase md:flex">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-[var(--brass)]">
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <SiteNav navLinks={navLinks} />
         <div className="flex items-center gap-4 text-xs uppercase tracking-[0.1em]">
           {user ? (
             <>
