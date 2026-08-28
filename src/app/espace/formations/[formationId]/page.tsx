@@ -13,12 +13,12 @@ export default async function FormationEspacePage({
   const { formationId } = await params;
 
   const inscription = await prisma.inscription.findFirst({
-    where: { eleveId: session.userId, statut: "CONFIRMEE", session: { formationId } },
-    include: { session: { include: { formation: true } } },
+    where: { eleveId: session.userId, statut: "CONFIRMEE", formationId },
+    include: { formation: true },
   });
   if (!inscription) notFound();
 
-  const formation = inscription.session.formation;
+  const formation = inscription.formation;
   const lecons = await prisma.lecon.findMany({
     where: { formationId },
     orderBy: { ordre: "asc" },

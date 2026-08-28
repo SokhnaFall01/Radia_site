@@ -23,7 +23,7 @@ export default async function AdminClientProfilePage({
       rendezVousClient: { include: { prestation: true }, orderBy: { date: "desc" } },
       rendezVousStaff: { include: { prestation: true, cliente: true }, orderBy: { date: "desc" } },
       commandes: { include: { lignes: { include: { produit: true } } }, orderBy: { createdAt: "desc" } },
-      inscriptions: { include: { session: { include: { formation: true } } }, orderBy: { createdAt: "desc" } },
+      inscriptions: { include: { formation: true, session: true }, orderBy: { createdAt: "desc" } },
       certificats: true,
     },
   });
@@ -132,8 +132,11 @@ export default async function AdminClientProfilePage({
       <ul className="mt-4 flex flex-col gap-3">
         {user.inscriptions.map((i) => (
           <li key={i.id} className="border border-[var(--ligne)] bg-white p-4 text-sm">
-            <p className="font-medium">{i.session.formation.titre}</p>
-            <p className="mt-1 text-xs uppercase tracking-[0.1em] text-[var(--brass)]">{i.statut}</p>
+            <p className="font-medium">{i.formation.titre}</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.1em] text-[var(--brass)]">
+              {i.statut}
+              {i.session ? ` — session du ${i.session.dateDebut.toLocaleDateString("fr-FR")}` : " — en ligne"}
+            </p>
           </li>
         ))}
         {user.inscriptions.length === 0 && (

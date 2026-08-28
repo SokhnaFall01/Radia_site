@@ -17,7 +17,7 @@ async function assertAccess(eleveId: string, leconId: string) {
     where: {
       eleveId,
       statut: "CONFIRMEE",
-      session: { formationId: lecon.formationId },
+      formationId: lecon.formationId,
     },
   });
   if (!inscription) return null;

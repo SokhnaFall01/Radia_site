@@ -30,9 +30,22 @@ enum OrigineRdv {
 }
 
 enum StatutInscription {
+  EN_ATTENTE_PAIEMENT
   CONFIRMEE
   LISTE_ATTENTE
   ANNULEE
+}
+
+enum CategorieFormation {
+  MAQUILLAGE
+  PERFECTIONNEMENT
+  BUSINESS
+  MASTERCLASS
+}
+
+enum ModeFormation {
+  EN_LIGNE
+  PRESENTIEL
 }
 
 enum StatutCommande {
@@ -127,19 +140,32 @@ model User {
 }
 
 model Formation {
-  id          String   @id @default(cuid())
-  titre       String
-  description String
-  programme   String
-  duree       String
-  tarifFcfa   Int
-  niveau      String
-  photos      String[]
-  publie      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id             String             @id @default(cuid())
+  titre          String
+  description    String
+  programme      String
+  duree          String
+  tarifFcfa      Int
+  niveau         String
+  photos         String[]
+  publie         Boolean            @default(false)
+  categorie      CategorieFormation @default(MAQUILLAGE)
+  mode           ModeFormation      @default(EN_LIGNE)
+  promesse       String?
+  objectifs      String[]           @default([])
+  pourQui        String[]           @default([])
+  inclus         String[]           @default([])
+  videoIntroUrl  String?
+  dureeVideo     String?
+  ordreAffichage Int                @default(0)
+  createdAt      DateTime           @default(now())
 
-  sessions Sessionformation[]
-  lecons   Lecon[]
+  sessions     Sessionformation[]
+  lecons       Lecon[]
+  inscriptions Inscription[]
+
+  @@index([categorie])
+  @@index([mode])
 }
 
 model Sessionformation {
@@ -157,17 +183,20 @@ model Sessionformation {
 }
 
 model Inscription {
-  id        String            @id @default(cuid())
-  eleve     User              @relation(fields: [eleveId], references: [id])
-  eleveId   String
-  session   Sessionformation  @relation(fields: [sessionId], references: [id])
-  sessionId String
-  statut    StatutInscription @default(CONFIRMEE)
-  createdAt DateTime          @default(now())
+  id          String            @id @default(cuid())
+  eleve       User              @relation(fields: [eleveId], references: [id])
+  eleveId     String
+  formation   Formation         @relation(fields: [formationId], references: [id])
+  formationId String
+  session     Sessionformation? @relation(fields: [sessionId], references: [id])
+  sessionId   String?
+  statut      StatutInscription @default(CONFIRMEE)
+  createdAt   DateTime          @default(now())
 
   certificat Certificat?
 
-  @@unique([eleveId, sessionId])
+  @@unique([eleveId, formationId])
+  @@index([formationId])
   @@index([sessionId])
 }
 

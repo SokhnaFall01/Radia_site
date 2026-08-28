@@ -19,7 +19,7 @@ export default async function LeconPage({
   const { score } = await searchParams;
 
   const inscription = await prisma.inscription.findFirst({
-    where: { eleveId: session.userId, statut: "CONFIRMEE", session: { formationId } },
+    where: { eleveId: session.userId, statut: "CONFIRMEE", formationId },
   });
   if (!inscription) notFound();
 

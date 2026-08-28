@@ -10,7 +10,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const { id } = await params;
   const certificat = await prisma.certificat.findUnique({
     where: { id },
-    include: { eleve: true, inscription: { include: { session: { include: { formation: true } } } } },
+    include: { eleve: true, inscription: { include: { formation: true } } },
   });
 
   if (!certificat) return new NextResponse(null, { status: 404 });
@@ -18,7 +18,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     return new NextResponse(null, { status: 403 });
   }
 
-  const formation = certificat.inscription.session.formation;
+  const formation = certificat.inscription.formation;
 
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([842, 595]);

@@ -11,7 +11,7 @@ export default async function MesFormationsPage() {
 
   const inscriptions = await prisma.inscription.findMany({
     where: { eleveId: session.userId, statut: "CONFIRMEE" },
-    include: { session: { include: { formation: { include: { lecons: true } } } } },
+    include: { formation: { include: { lecons: true } } },
   });
 
   const progressions = await prisma.progression.findMany({
@@ -35,7 +35,7 @@ export default async function MesFormationsPage() {
       ) : (
         <ul className="mt-8 flex flex-col gap-4">
           {inscriptions.map((inscription) => {
-            const formation = inscription.session.formation;
+            const formation = inscription.formation;
             const total = formation.lecons.length;
             const done = formation.lecons.filter((l) => doneLeconIds.has(l.id)).length;
             const pct = total > 0 ? Math.round((done / total) * 100) : 0;
