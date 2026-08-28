@@ -137,6 +137,67 @@ export async function deleteFormationSession(formationId: string, id: string) {
   redirect(`/admin/formations/${formationId}`);
 }
 
+// ---- Inscriptions formations (validation du paiement manuel) ----
+
+type MoyenPaiement = "WAVE" | "ORANGE_MONEY" | "FREE_MONEY" | "CARTE_BANCAIRE" | "ESPECES_SALON";
+const MOYENS_PAIEMENT: MoyenPaiement[] = [
+  "WAVE",
+  "ORANGE_MONEY",
+  "FREE_MONEY",
+  "CARTE_BANCAIRE",
+  "ESPECES_SALON",
+];
+
+export async function confirmerInscription(inscriptionId: string, formData: FormData) {
+  await requireAdmin();
+
+  const inscription = await prisma.inscription.findUnique({
+    where: { id: inscriptionId },
+    include: { formation: true },
+  });
+  if (!inscription) redirect("/admin/inscriptions");
+
+  // Idempotent : ne (re)cree un paiement que si la demande est encore en attente.
+  if (inscription.statut === "EN_ATTENTE_PAIEMENT") {
+    const moyenRaw = str(formData, "moyen");
+    const moyen = (MOYENS_PAIEMENT.includes(moyenRaw as MoyenPaiement)
+      ? moyenRaw
+      : "WAVE") as MoyenPaiement;
+
+    await prisma.$transaction([
+      prisma.inscription.update({
+        where: { id: inscriptionId },
+        data: { statut: "CONFIRMEE" },
+      }),
+      prisma.paiement.create({
+        data: {
+          userId: inscription.eleveId,
+          montantFcfa: inscription.formation.tarifFcfa,
+          moyen,
+          type: "FORMATION",
+          statut: "PAYE",
+        },
+      }),
+    ]);
+  }
+
+  revalidatePath("/admin/inscriptions");
+  revalidatePath("/espace/formations");
+  redirect("/admin/inscriptions?maj=ok");
+}
+
+export async function annulerInscription(inscriptionId: string) {
+  await requireAdmin();
+
+  await prisma.inscription.update({
+    where: { id: inscriptionId },
+    data: { statut: "ANNULEE" },
+  });
+
+  revalidatePath("/admin/inscriptions");
+  redirect("/admin/inscriptions?maj=annulee");
+}
+
 // ---- Prestations ----
 
 export async function createPrestation(formData: FormData) {

@@ -158,7 +158,7 @@ export default async function Home() {
                   <h3 className="mt-4 text-sm uppercase tracking-[0.08em]">{f.titre}</h3>
                   <p className="mt-2 text-sm text-[var(--gris)]">{f.description}</p>
                   <Link
-                    href="/academy"
+                    href={`/academy/${f.id}`}
                     className="mt-4 inline-block bg-[var(--blush)] px-6 py-3 text-xs uppercase tracking-[0.14em] hover:bg-[var(--noir)] hover:text-[var(--porcelaine)]"
                   >
                     Decouvrir

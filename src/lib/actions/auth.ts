@@ -6,6 +6,13 @@ import { prisma } from "@/lib/db";
 import { createSession, deleteSession } from "@/lib/session";
 import { SignupFormSchema, LoginFormSchema, type AuthFormState } from "@/lib/definitions";
 
+// N'autorise qu'une redirection interne (chemin commencant par un seul "/").
+function safeRedirect(value: FormDataEntryValue | null): string | null {
+  const s = typeof value === "string" ? value.trim() : "";
+  if (s.startsWith("/") && !s.startsWith("//")) return s;
+  return null;
+}
+
 export async function signup(_state: AuthFormState, formData: FormData): Promise<AuthFormState> {
   const validated = SignupFormSchema.safeParse({
     nom: formData.get("nom"),
@@ -32,7 +39,7 @@ export async function signup(_state: AuthFormState, formData: FormData): Promise
   });
 
   await createSession(user.id, user.role);
-  redirect("/espace");
+  redirect(safeRedirect(formData.get("redirectTo")) ?? "/espace");
 }
 
 export async function login(_state: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -58,7 +65,8 @@ export async function login(_state: AuthFormState, formData: FormData): Promise<
   }
 
   await createSession(user.id, user.role);
-  redirect(user.role === "ADMIN" || user.role === "STAFF" ? "/admin" : "/espace");
+  const fallback = user.role === "ADMIN" || user.role === "STAFF" ? "/admin" : "/espace";
+  redirect(safeRedirect(formData.get("redirectTo")) ?? fallback);
 }
 
 export async function logout() {

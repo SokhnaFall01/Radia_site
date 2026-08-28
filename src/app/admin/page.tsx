@@ -23,6 +23,10 @@ export default async function AdminPage() {
     ? 0
     : await prisma.demandeDevis.count({ where: { statut: "NOUVEAU" } });
 
+  const inscriptionsEnAttente = isStaffOnly
+    ? 0
+    : await prisma.inscription.count({ where: { statut: "EN_ATTENTE_PAIEMENT" } });
+
   return (
     <section className="mx-auto max-w-4xl px-6 py-20">
       <h1 className="font-display text-2xl uppercase tracking-[0.12em]">
@@ -57,6 +61,17 @@ export default async function AdminPage() {
             className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
           >
             Formations &amp; sessions
+          </Link>
+          <Link
+            href="/admin/inscriptions"
+            className="border border-[var(--noir)] bg-white p-5 text-sm hover:bg-[var(--blush)]"
+          >
+            Inscriptions formations
+            {inscriptionsEnAttente > 0 && (
+              <span className="ml-2 bg-[var(--brass)] px-2 py-0.5 text-xs text-white">
+                {inscriptionsEnAttente} a valider
+              </span>
+            )}
           </Link>
           <Link
             href="/admin/prestations"

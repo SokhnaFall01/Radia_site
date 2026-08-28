@@ -44,6 +44,34 @@ async function maybeIssueCertificate(eleveId: string, formationId: string, inscr
   });
 }
 
+// Parcours d'achat digital (paiement manuel) : la cliente demande l'acces,
+// l'inscription reste EN_ATTENTE_PAIEMENT jusqu'a validation par l'admin.
+export async function demanderInscriptionFormation(formationId: string) {
+  const session = await verifySession();
+  if (!session) {
+    redirect(`/connexion?next=${encodeURIComponent(`/academy/${formationId}/acheter`)}`);
+  }
+
+  const formation = await prisma.formation.findUnique({ where: { id: formationId } });
+  if (!formation || !formation.publie) redirect("/academy");
+
+  const existing = await prisma.inscription.findUnique({
+    where: { eleveId_formationId: { eleveId: session.userId, formationId } },
+  });
+
+  if (existing?.statut === "CONFIRMEE") {
+    redirect(`/espace/formations/${formationId}`);
+  }
+
+  if (!existing) {
+    await prisma.inscription.create({
+      data: { eleveId: session.userId, formationId, statut: "EN_ATTENTE_PAIEMENT" },
+    });
+  }
+
+  redirect(`/academy/${formationId}/acheter?demande=1`);
+}
+
 export async function markLeconComplete(leconId: string) {
   const session = await verifySession();
   if (!session) redirect("/connexion");
