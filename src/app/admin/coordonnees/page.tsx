@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { verifySession } from "@/lib/dal";
-import { getCoordonnees } from "@/lib/contenu";
+import { getCoordonnees, getInfosPaiement } from "@/lib/contenu";
 import { updateCoordonnees } from "@/lib/actions/admin";
 
 export const metadata = { title: "Coordonnees — Administration" };
@@ -16,7 +16,7 @@ export default async function AdminCoordonneesPage({
   if (session.role !== "ADMIN") redirect("/admin");
   const { maj } = await searchParams;
 
-  const c = await getCoordonnees();
+  const [c, p] = await Promise.all([getCoordonnees(), getInfosPaiement()]);
 
   return (
     <section className="mx-auto max-w-2xl px-6 py-20">
@@ -66,6 +66,30 @@ export default async function AdminCoordonneesPage({
           <label className="text-xs uppercase tracking-[0.1em]" htmlFor="facebook">Facebook (lien complet)</label>
           <input id="facebook" name="facebook" defaultValue={c.facebook} placeholder="https://facebook.com/radiaglam" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
         </div>
+        <h2 className="mt-6 font-display text-sm uppercase tracking-[0.12em]">
+          Paiement des formations en ligne
+        </h2>
+        <p className="text-xs text-[var(--gris)]">
+          Ces numeros s&apos;affichent lors de l&apos;achat d&apos;une formation. La cliente paie,
+          puis vous confirmez le paiement depuis « Inscriptions formations ».
+        </p>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="wave">Numero Wave</label>
+          <input id="wave" name="wave" defaultValue={p.wave} placeholder="+221 77 000 00 00" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="orangeMoney">Numero Orange Money</label>
+          <input id="orangeMoney" name="orangeMoney" defaultValue={p.orangeMoney} placeholder="+221 77 000 00 00" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="freeMoney">Numero Free Money</label>
+          <input id="freeMoney" name="freeMoney" defaultValue={p.freeMoney} placeholder="+221 76 000 00 00" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.1em]" htmlFor="instructions">Instructions de paiement (optionnel)</label>
+          <textarea id="instructions" name="instructions" defaultValue={p.instructions} rows={2} placeholder="ex: Merci d'indiquer votre nom en note du paiement." className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
+        </div>
+
         <button
           type="submit"
           className="mt-2 self-start border border-[var(--noir)] bg-[var(--noir)] px-6 py-3 text-xs uppercase tracking-[0.12em] text-[var(--porcelaine)]"

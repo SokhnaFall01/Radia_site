@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { verifySession } from "@/lib/dal";
 import { saveUploadedPhoto } from "@/lib/uploads";
-import { CONTACT_KEYS } from "@/lib/contenu";
+import { CONTACT_KEYS, PAIEMENT_KEYS } from "@/lib/contenu";
 import { SITE_TEXT_KEYS } from "@/lib/contenuTextes";
 
 async function requireAdmin() {
@@ -30,6 +30,25 @@ function photoFile(formData: FormData) {
   return v instanceof File ? v : null;
 }
 
+// Une valeur par ligne (pour les listes objectifs / pourQui / inclus).
+function lines(formData: FormData, key: string): string[] {
+  return str(formData, key)
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+}
+
+type CategorieFormation = "MAQUILLAGE" | "PERFECTIONNEMENT" | "BUSINESS" | "MASTERCLASS";
+function categorieFormation(formData: FormData): CategorieFormation {
+  const v = str(formData, "categorie");
+  const valides: CategorieFormation[] = ["MAQUILLAGE", "PERFECTIONNEMENT", "BUSINESS", "MASTERCLASS"];
+  return valides.includes(v as CategorieFormation) ? (v as CategorieFormation) : "MAQUILLAGE";
+}
+
+function modeFormation(formData: FormData): "EN_LIGNE" | "PRESENTIEL" {
+  return str(formData, "mode") === "PRESENTIEL" ? "PRESENTIEL" : "EN_LIGNE";
+}
+
 // ---- Formations ----
 
 export async function createFormation(formData: FormData) {
@@ -52,6 +71,15 @@ export async function createFormation(formData: FormData) {
       niveau: str(formData, "niveau"),
       publie: formData.get("publie") === "on",
       photos: photoUrl ? [photoUrl] : [],
+      categorie: categorieFormation(formData),
+      mode: modeFormation(formData),
+      promesse: str(formData, "promesse") || null,
+      objectifs: lines(formData, "objectifs"),
+      pourQui: lines(formData, "pourQui"),
+      inclus: lines(formData, "inclus"),
+      videoIntroUrl: str(formData, "videoIntroUrl") || null,
+      dureeVideo: str(formData, "dureeVideo") || null,
+      ordreAffichage: num(formData, "ordreAffichage"),
     },
   });
 
@@ -83,12 +111,22 @@ export async function updateFormation(id: string, formData: FormData) {
       niveau: str(formData, "niveau"),
       publie: formData.get("publie") === "on",
       photos: photoUrl ? [photoUrl] : (existing?.photos ?? []),
+      categorie: categorieFormation(formData),
+      mode: modeFormation(formData),
+      promesse: str(formData, "promesse") || null,
+      objectifs: lines(formData, "objectifs"),
+      pourQui: lines(formData, "pourQui"),
+      inclus: lines(formData, "inclus"),
+      videoIntroUrl: str(formData, "videoIntroUrl") || null,
+      dureeVideo: str(formData, "dureeVideo") || null,
+      ordreAffichage: num(formData, "ordreAffichage"),
     },
   });
 
   revalidatePath("/admin/formations");
   revalidatePath(`/admin/formations/${id}`);
   revalidatePath("/academy");
+  revalidatePath(`/academy/${id}`);
   redirect(`/admin/formations/${id}?maj=ok`);
 }
 
@@ -135,6 +173,58 @@ export async function deleteFormationSession(formationId: string, id: string) {
 
   revalidatePath(`/admin/formations/${formationId}`);
   redirect(`/admin/formations/${formationId}`);
+}
+
+// ---- Lecons / modules video ----
+
+export async function createLecon(formationId: string, formData: FormData) {
+  await requireAdmin();
+
+  await prisma.lecon.create({
+    data: {
+      formationId,
+      titre: str(formData, "titre"),
+      ordre: num(formData, "ordre"),
+      videoUrl: str(formData, "videoUrl") || null,
+      pdfUrl: str(formData, "pdfUrl") || null,
+    },
+  });
+
+  revalidatePath(`/admin/formations/${formationId}/modules`);
+  revalidatePath(`/academy/${formationId}`);
+  redirect(`/admin/formations/${formationId}/modules`);
+}
+
+export async function updateLecon(formationId: string, id: string, formData: FormData) {
+  await requireAdmin();
+
+  await prisma.lecon.update({
+    where: { id },
+    data: {
+      titre: str(formData, "titre"),
+      ordre: num(formData, "ordre"),
+      videoUrl: str(formData, "videoUrl") || null,
+      pdfUrl: str(formData, "pdfUrl") || null,
+    },
+  });
+
+  revalidatePath(`/admin/formations/${formationId}/modules`);
+  revalidatePath(`/academy/${formationId}`);
+  redirect(`/admin/formations/${formationId}/modules?maj=ok`);
+}
+
+export async function deleteLecon(formationId: string, id: string) {
+  await requireAdmin();
+
+  try {
+    await prisma.lecon.delete({ where: { id } });
+  } catch {
+    redirect(`/admin/formations/${formationId}/modules?erreur=suppression`);
+  }
+
+  revalidatePath(`/admin/formations/${formationId}/modules`);
+  revalidatePath(`/academy/${formationId}`);
+  redirect(`/admin/formations/${formationId}/modules`);
 }
 
 // ---- Inscriptions formations (validation du paiement manuel) ----
@@ -399,7 +489,8 @@ export async function deleteJourFerme(id: string) {
 export async function updateCoordonnees(formData: FormData) {
   await requireAdmin();
 
-  for (const [name, cle] of Object.entries(CONTACT_KEYS)) {
+  const clesAEnregistrer = { ...CONTACT_KEYS, ...PAIEMENT_KEYS };
+  for (const [name, cle] of Object.entries(clesAEnregistrer)) {
     const valeur = str(formData, name);
     await prisma.contenuSite.upsert({
       where: { cle },

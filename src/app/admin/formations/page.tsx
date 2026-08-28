@@ -99,6 +99,28 @@ export default async function AdminFormationsPage({
             <input id="tarifFcfa" name="tarifFcfa" type="number" min={0} required className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm" />
           </div>
         </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-xs uppercase tracking-[0.1em]" htmlFor="categorie">Categorie</label>
+            <select id="categorie" name="categorie" defaultValue="MAQUILLAGE" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm">
+              <option value="MAQUILLAGE">Maquillage</option>
+              <option value="PERFECTIONNEMENT">Perfectionnement</option>
+              <option value="BUSINESS">Business</option>
+              <option value="MASTERCLASS">Masterclass</option>
+            </select>
+          </div>
+          <div>
+            <label className="text-xs uppercase tracking-[0.1em]" htmlFor="mode">Mode</label>
+            <select id="mode" name="mode" defaultValue="EN_LIGNE" className="mt-1 w-full border border-[var(--noir)] bg-white px-3 py-2 text-sm">
+              <option value="EN_LIGNE">En ligne (acces immediat)</option>
+              <option value="PRESENTIEL">Presentiel (sessions)</option>
+            </select>
+          </div>
+        </div>
+        <p className="text-xs text-[var(--gris)]">
+          Astuce : creez la formation, puis ajoutez ses modules et les textes de la page de vente
+          depuis la fiche formation.
+        </p>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="publie" />
           Publier immediatement (visible sur /academy)
